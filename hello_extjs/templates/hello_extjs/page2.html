@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %} PAGE 2 TEST GRILLE {% endblock %}
+
+{% block head %} 
+
+	<script type='text/javascript' src='/static/hello_extjs/page2.js'></script>
+
+{% endblock %}
+
+{% block content %} 
+
+<div id="hidden-csrf" class="x-hidden">
+	{% csrf_token %}
+</div>
+
+<p>
+Page 2 de TEST => Une Grille
+</p>
+
+{% endblock %}

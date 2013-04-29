@@ -1,0 +1,91 @@
+<!-- Do NOT put any DOCTYPE here unless you want problems in IEs. -->
+<html>
+
+<head>
+<!-- The following line defines content type and utf-8 as character set. -->
+<!-- If you want your application to work flawlessly with various local -->
+<!-- characters, just make ALL strings, on the page, json and database utf-8. -->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!-- Ext relies on its default css so include it here. -->
+<!-- This must come BEFORE javascript includes! -->
+<link rel="stylesheet" type="text/css" href="/static/static/ext-4.2.0.663/resources/css/ext-all.css">
+
+<!-- 3rd party css -->
+
+<!-- Include here your own css files if you have them. -->
+
+<!-- First of javascript includes must be an adapter... -->
+<script type="text/javascript" src="/static/static/ext-4.2.0.663/adapter/ext/ext-base.js"></script>
+
+<!-- ...then you need the Ext itself, either debug or production version. -->
+<script type="text/javascript" src="/static/static/ext-4.2.0.663/ext-all-debug.js"></script>
+
+
+<!-- Main js program -->
+
+
+<!-- Set a title for the page (id is not necessary). -->
+<title> PAGE 1</title>
+
+<!-- You can have onReady function here or in your application file. -->
+<!-- If you have it in your application file delete the whole -->
+<!-- following script tag as we must have only one onReady. -->
+<script type="text/javascript">
+// Path to the blank image must point to a valid location on your server
+//Ext.BLANK_IMAGE_URL = '/static/static/ext-4.2.0.663/resources/images/default/s.gif';
+</script>
+
+ 
+
+	<script type='text/javascript'>
+    Ext.onReady(function(){ 
+
+    Ext.define('GModel', {
+    extend: 'Ext.data.Model',
+    fields:["phone", "name", "email"]
+    });
+    
+    var GStore = Ext.create('Ext.data.Store', {
+    model: GModel,
+    data: [
+    {"phone": "555-111-1224", "name": "Lisa", "email": "lisa@simpsons.com"}, {"phone": "555-222-1234", "name": "Bart", "email": "bart@simpsons.com"}, {"phone": "555-222-1244", "name": "Homer", "email": "home@simpsons.com"}, {"phone": "555-222-1254", "name": "Marge", "email": "marge@simpsons.com"}]
+    
+    });
+    
+	/*
+    Ext.create('Ext.grid.Panel', {
+        renderTo: Ext.getBody(),
+        store: GStore,
+        width: 400,
+        height: 200,
+        title: 'TITRE DE LA GRILLE',
+        columns:[
+		{width: 100, dataIndex: "phone", text: "Telephone"},
+		{"hideable": false, "width": 100, "dataIndex": "name", "text": "Nom"},
+		{"width": 150, "hidden": true, "dataIndex": "email", "text": "Email"} 
+		]});
+    */ 
+    )};
+    </script>
+
+
+
+</head>
+
+<body>
+ 
+
+<div id="hidden-csrf" class="x-hidden">
+	<div style='display:none'><input type='hidden' name='csrfmiddlewaretoken' value='CKFQ1WOx9cF2g7RYMsPFnBJCS4SnJbFg' /></div>
+</div>
+
+<p>
+Page 1 de TEST 
+Essai pour faire un saisie a peu pres correcte
+</p>
+
+
+</body>
+
+</html>

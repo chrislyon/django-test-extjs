@@ -1,0 +1,24 @@
+{% extends "base4.html" %}
+
+{% block title %} PAGE 1{% endblock %}
+
+{% block head %} 
+
+	<script type='text/javascript'>
+    {{ SCRIPT_EXTJS|safe }} 
+    </script>
+
+{% endblock %}
+
+{% block content %} 
+
+<div id="hidden-csrf" class="x-hidden">
+	{% csrf_token %}
+</div>
+
+<p>
+Page 1 de TEST 
+Essai pour faire un saisie a peu pres correcte
+</p>
+
+{% endblock %}
