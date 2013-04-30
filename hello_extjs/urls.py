@@ -11,4 +11,5 @@ urlpatterns = patterns('hello_extjs.views',
     (r'^p41$', 'page41'),
     (r'^p42$', 'page42'),
     (r'^p43$', 'page43'),
+    (r'^p44$', 'page44'),
 )

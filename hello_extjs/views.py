@@ -70,23 +70,55 @@ def page42(request):
     return render( request, template, { 'SCRIPT_EXTJS':S } )
 
 def page43(request):
-    g = ExtGrid()
-    g.add_champ( Champ('name', text='Nom du Contact', width=150) )
-    g.add_champ( Champ('email', text='E-Mail', width=200) )
-    g.add_champ( Champ('phone', text="Telephone") )
-    g.add_champ( Champ('zipcode', text='Code Postal', hidden=True) )
-    g.titre = "Nouvelle Grille Auto"
-    g.width = 600
-    g.heigth = 300
-
-    ## Pour Test
-    g.data = [
-        { 'name': 'Lisa', 'email': 'lisa@simpsons.com', 'phone': '555-111-1224' , 'zipcode':"010101" },
-        { 'name': 'Bart', 'email': 'bart@simpsons.com', 'phone': '555-222-1234' , 'zipcode':"010101" },
-        { 'name': 'Homer', 'email': 'home@simpsons.com', 'phone': '555-222-1244' , 'zipcode':"010101" },
-        { 'name': 'Marge', 'email': 'marge@simpsons.com', 'phone': '555-222-1254' , 'zipcode':"010101" }
+    S = """
+    Ext.require('Ext.form.Panel');
+    Ext.require('Ext.form.field.Date');
+    Ext.onReady(function() {
+    Ext.create('Ext.form.Panel', {
+    renderTo: Ext.getBody(),
+    url:'/user',
+    title: 'User Form',
+    height: 200,
+    width: 280,
+    bodyPadding: 10,
+    defaultType: 'textfield',
+    items: [
+    {
+    fieldLabel: 'First Name',
+    name: 'firstName'
+    },
+    {
+    fieldLabel: 'Last Name',
+    name: 'lastName'
+    },
+    {
+    xtype: 'datefield',
+    fieldLabel: 'Date of Birth',
+    name: 'birthDate'
+    }
+    ],
+    buttons: [
+    {
+    text: 'Submit',
+    handler: function() {
+    var form = this.up('form').getForm(); // get the basic form
+    if (form.isValid()) { // make sure the form contains valid data before submitting
+    form.submit({
+    success: function(form, action) {
+    Ext.Msg.alert('Success', action.result.msg);
+    },
+    failure: function(form, action) {
+    Ext.Msg.alert('Failed', action.result.msg);
+    }
+    });
+    } else { // display error alert if the data is invalid
+    Ext.Msg.alert('Invalid Data', 'Please correct form errors.')
+    }
+    }
+    }
     ]
-    S = g.render()
-
+    });
+    });
+    """
     template = 'hello_extjs/page42.html'
     return render( request, template, { 'SCRIPT_EXTJS':S } )

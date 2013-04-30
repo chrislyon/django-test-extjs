@@ -2,7 +2,7 @@
 syntax: glob
 
 *.elc
-*.pyc
+**.pyc
 *~
 
 # switch to regexp syntax.
@@ -12,3 +12,4 @@ static/ext-3.4.1/
 static/ext-4.2.0.663/
 arch/ext-3.4.1.1-gpl.zip
 arch/ext-4.2.0-gpl.zip
+.pyc$
