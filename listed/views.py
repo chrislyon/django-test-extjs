@@ -5,7 +5,7 @@ from django.shortcuts import render, render_to_response, HttpResponse
 from django.shortcuts import HttpResponseRedirect
 
 from contact.models import Contact
-from extjs_lib.grid import ExtGrid, Champ
+from extjs_lib.grid import ExtGrid, GridCol
 
 # Plus besoin 
 #from django.views.decorators.csrf import csrf_exempt
@@ -75,10 +75,10 @@ def liste(request):
         ## Parametrage de la grille (request GET)
         ## ---------------------------------------
         g = ExtGrid()
-        g.add_champ( Champ('id', text='Id', width=50, sortable=True) )
-        g.add_champ( Champ('cod_contact', text='Code', width=100, sortable=True) )
-        g.add_champ( Champ('nom_contact', text="Nom", width=200, sortable=True) )
-        g.add_champ( Champ('tel_contact', text='Telephone', width=200) )
+        g.add_col( GridCol('id', text='Id', width=50, sortable=True) )
+        g.add_col( GridCol('cod_contact', text='Code', width=100, sortable=True) )
+        g.add_col( GridCol('nom_contact', text="Nom", width=200, sortable=True) )
+        #g.add_col( GridCol('tel_contact', text='Telephone', width=200) )
         g.titre = "Nouvelle Grille Auto"
         g.width = 800 
         g.height = 400 

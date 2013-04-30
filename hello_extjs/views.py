@@ -4,7 +4,8 @@ from django.shortcuts import render_to_response, HttpResponse, render
 from django.views.decorators.csrf import csrf_exempt
 
 from collections import OrderedDict
-from extjs_lib.grid import ExtGrid, Champ
+from extjs_lib.grid import ExtGrid, GridCol
+from extjs_lib.form import ExtForm, Zone
 
 
 def index(request):
@@ -69,56 +70,18 @@ def page42(request):
     template = 'hello_extjs/page42.html'
     return render( request, template, { 'SCRIPT_EXTJS':S } )
 
+@csrf_exempt
 def page43(request):
-    S = """
-    Ext.require('Ext.form.Panel');
-    Ext.require('Ext.form.field.Date');
-    Ext.onReady(function() {
-    Ext.create('Ext.form.Panel', {
-    renderTo: Ext.getBody(),
-    url:'/user',
-    title: 'User Form',
-    height: 200,
-    width: 280,
-    bodyPadding: 10,
-    defaultType: 'textfield',
-    items: [
-    {
-    fieldLabel: 'First Name',
-    name: 'firstName'
-    },
-    {
-    fieldLabel: 'Last Name',
-    name: 'lastName'
-    },
-    {
-    xtype: 'datefield',
-    fieldLabel: 'Date of Birth',
-    name: 'birthDate'
-    }
-    ],
-    buttons: [
-    {
-    text: 'Submit',
-    handler: function() {
-    var form = this.up('form').getForm(); // get the basic form
-    if (form.isValid()) { // make sure the form contains valid data before submitting
-    form.submit({
-    success: function(form, action) {
-    Ext.Msg.alert('Success', action.result.msg);
-    },
-    failure: function(form, action) {
-    Ext.Msg.alert('Failed', action.result.msg);
-    }
-    });
-    } else { // display error alert if the data is invalid
-    Ext.Msg.alert('Invalid Data', 'Please correct form errors.')
-    }
-    }
-    }
-    ]
-    });
-    });
-    """
-    template = 'hello_extjs/page42.html'
-    return render( request, template, { 'SCRIPT_EXTJS':S } )
+    if request.method == 'POST':
+        r = '{ success: false, msg: "OK A VENIR" }'
+        return HttpResponse(r, mimetype='application/json')
+    else:
+        f = ExtForm()
+        f.url = '/hello_extjs/p43'
+        f.add_zone(Zone( 'Nom' ))
+        f.add_zone(Zone( 'prenom', fieldLabel="Prenom" ))
+        f.add_zone(Zone( 'description', fieldLabel="Commentaire" ))
+        S = f.render()
+        
+        template = 'hello_extjs/page42.html'
+        return render( request, template, { 'SCRIPT_EXTJS':S } )

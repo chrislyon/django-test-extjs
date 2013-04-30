@@ -23,14 +23,14 @@ class ExtGrid(object):
         self.button_new_url = self.base_url + '/cr'
         self.button_home = True
         self.button_home_url = '/'
-        self.champs = []
+        self.cols = []
         self.data = []
 
-    def add_champ(self, champ):
-        self.champs.append(champ)
+    def add_col(self, col):
+        self.cols.append(col)
 
-    def liste_champ_name(self):
-        return [ c.name for c in self.champs ]
+    def liste_cols_name(self):
+        return [ c.name for c in self.cols ]
 
     def render(self):
         scripts = ''
@@ -64,8 +64,8 @@ class ExtGrid(object):
         """
         if self.modif or self.delete:
             scripts += DEL_MOD
-        ## Attention l'ordre des champs a de l'importance
-        scripts += model % simplejson.dumps(self.liste_champ_name())
+        ## Attention l'ordre des cols a de l'importance
+        scripts += model % simplejson.dumps(self.liste_cols_name())
         ## Definition du store
         store = """
         var CSRF_TOKEN = Ext.util.Cookies.get('csrftoken');
@@ -106,7 +106,7 @@ class ExtGrid(object):
         grid_debut += "columns:["
         grid_fin = " });"
         scripts += grid_debut
-        cols = [ c.to_grid() for c in self.champs ]
+        cols = [ c.to_grid() for c in self.cols ]
         if self.modif:
             cols.append("{header: 'Edit', width: 50, dataIndex: 'id',sortable: false, renderer: renderIcon_mod }")
         if self.delete:
@@ -155,9 +155,9 @@ class ExtGrid(object):
 ## ---------------
 ## CLASS CHAMP
 ## ---------------
-class Champ(object):
+class GridCol(object):
     """
-        Champ de la grille
+        Colonne de la grille
     """
     def __init__(self, name, **kwargs):
         self.name = name
@@ -174,10 +174,10 @@ class Champ(object):
 
 def test2():
     g = ExtGrid()
-    g.add_champ( Champ('name') )
-    g.add_champ( Champ('email') )
-    g.add_champ( Champ('phone') )
-    g.add_champ( Champ('zipcode') )
+    g.add_col( GridCol('name') )
+    g.add_col( GridCol('email') )
+    g.add_col( GridCol('phone') )
+    g.add_col( GridCol('zipcode') )
     g.titre = "Nouvelle Grille Auto"
 
     ## Pour Test
