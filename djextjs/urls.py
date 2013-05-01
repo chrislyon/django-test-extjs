@@ -18,4 +18,5 @@ urlpatterns = patterns('',
     url(r'^hello_extjs/', include('hello_extjs.urls')),
     url(r'^contact/', include('contact.urls')),
     url(r'^listed/', include('listed.urls')),
+    url(r'^formd/', include('formd.urls')),
 )

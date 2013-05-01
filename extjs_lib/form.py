@@ -3,6 +3,7 @@
 ### FORMULAIRE EXTJS
 ### ------------------
 
+import sys
 from django.utils import simplejson
 
 class ExtForm(object):
@@ -32,9 +33,24 @@ class ExtForm(object):
         Ext.require('Ext.form.Panel');
         Ext.require('Ext.form.field.Date');
         Ext.onReady(function() {
-        Ext.create('Ext.form.Panel', {
+        var CSRF_TOKEN = Ext.util.Cookies.get('csrftoken');
         """
+
         S = ""
+        DEF_STORE = """
+        var %s  = Ext.create('Ext.data.Store', {
+            fields: ['value', 'display'],
+            data : [ 
+            %s 
+            ] });
+        """ 
+        combos = [ z for z in self.zones if z.xtype == 'combo' ]
+        for c in combos:
+            store_name = "ST_%s" % c.name
+            store_data = c.data_to_json()
+            S += DEF_STORE % ( store_name, store_data )
+
+        S += "Ext.create('Ext.form.Panel', {"
         S += "renderTo: %s, " % self.renderTo
         S += "url: '%s', " % self.url
         S += "height: %s, " % self.height
@@ -49,6 +65,7 @@ class ExtForm(object):
         S += self.liste_zones()
         S += """
             ],
+            baseParams: {'csrfmiddlewaretoken':CSRF_TOKEN},
         buttons: [
             {
                 text: 'Submit',
@@ -84,17 +101,60 @@ class Zone(object):
         self.width = kwargs.get('width',100)
         self.hidden = kwargs.get('hidden', False)
         self.xtype = kwargs.get('xtype', None)
+        self.data = kwargs.get('data', None)
+
+    def data_to_json(self):
+        T =  ','.join([ "{'%s':'%s'}" % d for d in self.data ])
+        #T = "{"+T+"}"
+        return T
 
     def to_form(self):
-        d = { 'fieldLabel':self.fieldLabel, 'name':self.name }
+        if self.xtype == "combo":
+            d = """
+                Ext.create('Ext.form.ComboBox', {
+                    fieldLabel: '%s',
+                    store: ST_%s,
+                    queryMode: 'local',
+                    displayField: 'display',
+                    valueField: 'value',
+                    renderTo: Ext.getBody()
+                })
+            """ % ( self.fieldLabel, self.name )
+            f = """
+                {   fieldLabel: '%s', 
+                    name:'%s', 
+                    xtype:'combo', 
+                    store:ST_%s,
+                    queryMode: 'local',
+                    displayField: 'display',
+                    valueField: 'value',
+                }
+                """ % ( self.fieldLabel, self.name, self.name )
+            return d
+        else:
+            d = { 'fieldLabel':self.fieldLabel, 'name':self.name }
         return simplejson.dumps(d)
 
 
 def test():
+
+    TYP_CTC = ( 
+            ( 'PRO', 'PROFESSIONEL'),
+            ( 'PERSO', 'PERSONNEL' ),
+            ( 'VIP', 'VIP'),
+            ( 'AUTRE', 'AUTRE'),
+    )
+
+    
+
+    #print simplejson.dumps(T)
+    #sys.exit()
+
     f = ExtForm()
     f.add_zone(Zone( 'Nom' ))
     f.add_zone(Zone( 'prenom', fieldLabel="Prenom" ))
     f.add_zone(Zone( 'description', fieldLabel="Commentaire" ))
+    f.add_zone(Zone( 'typ_contact', fieldLabel="Type Contact", xtype='combo', data = TYP_CTC ))
     print f.render()
 
 

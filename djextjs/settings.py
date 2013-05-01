@@ -128,6 +128,7 @@ INSTALLED_APPS = (
     'hello_extjs',
     'contact',
     'listed',
+    'formd',
 )
 
 # A sample logging configuration. The only tangible logging

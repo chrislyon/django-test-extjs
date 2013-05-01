@@ -1,0 +1,102 @@
+<!-- Do NOT put any DOCTYPE here unless you want problems in IEs. -->
+<html class="x-border-box x-quirks"><head>
+<!-- The following line defines content type and utf-8 as character set. -->
+<!-- If you want your application to work flawlessly with various local -->
+<!-- characters, just make ALL strings, on the page, json and database utf-8. -->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<!-- Ext relies on its default css so include it here. -->
+<!-- This must come BEFORE javascript includes! -->
+<link rel="stylesheet" type="text/css" href="formd_files/ext-all.css">
+
+<!-- 3rd party css -->
+
+<!-- Include here your own css files if you have them. -->
+
+<!-- First of javascript includes must be an adapter... -->
+<!-- Apparemment plus besoin en Ext4 -->
+<!-- <script type="text/javascript" src="/static/static/ext-4.2.0.663/adapter/ext/ext-base.js"></script> -->
+
+<!-- ...then you need the Ext itself, either debug or production version. -->
+<script type="text/javascript" src="formd_files/ext-all-debug.js"></script>
+
+
+<!-- Main js program -->
+
+
+<!-- Set a title for the page (id is not necessary). -->
+<title>  </title>
+
+<!-- You can have onReady function here or in your application file. -->
+<!-- If you have it in your application file delete the whole -->
+<!-- following script tag as we must have only one onReady. -->
+<script type="text/javascript">
+// Path to the blank image must point to a valid location on your server
+Ext.BLANK_IMAGE_URL = '/static/static/ext-4.2.0.663/resources/images/default/s.gif';
+</script>
+
+ 
+	<script type="text/javascript">
+	
+        Ext.require('Ext.form.Panel');
+        Ext.require('Ext.form.field.Date');
+        Ext.onReady(function() {
+        var CSRF_TOKEN = Ext.util.Cookies.get('csrftoken');
+        
+        var ST_typ_contact  = Ext.create('Ext.data.Store', {
+            fields: ['value', 'display'],
+            data : [ 
+            {'PRO':'PROFESSIONEL'},{'PERSO':'PERSONNEL'},{'VIP':'VIP'},{'AUTRE':'AUTRE'} 
+            ] });
+        Ext.create('Ext.form.Panel', {renderTo: Ext.getBody(), url: '/formd/p1', height: 300, width: 600, bodyPadding: 10, title: 'TITRE A CHANGER', defaultType: 'textfield', 
+            items: [
+            {"fieldLabel": "Code Contact", "name": "cod_contact"},{"fieldLabel": "Nom du Contact", "name": "nom_contact"},{"fieldLabel": "Description", "name": "description"},{"fieldLabel": "Telephone", "name": "tel_contact"},
+                Ext.create('Ext.form.ComboBox', {
+                    fieldLabel: 'Type de Contact',
+                    store: ST_typ_contact,
+                    queryMode: 'local',
+                    displayField: 'display',
+                    valueField: 'value',
+                    renderTo: Ext.getBody()
+                })
+            
+            ],
+            baseParams: {'csrfmiddlewaretoken':CSRF_TOKEN},
+        buttons: [
+            {
+                text: 'Submit',
+                handler: function() {
+                    var form = this.up('form').getForm(); // get the basic form
+                    if (form.isValid()) { // make sure the form contains valid data before submitting
+                        form.submit({
+                        success: function(form, action) {
+                            Ext.Msg.alert('Success', action.result.msg);
+                        },
+                        failure: function(form, action) {
+                            Ext.Msg.alert('Failed', action.result.msg);
+                        }
+                        });
+                    } else { // display error alert if the data is invalid
+                        Ext.Msg.alert('Invalid Data', 'Please correct form errors.')
+                    }
+                }
+            }
+            ]
+            });
+        }); 
+	</script>
+
+
+</head>
+
+<body id="ext-gen1018" class="x-body x-gecko x-linux">
+ 
+
+<div id="hidden-csrf" class="x-hidden">
+<div style="display:none"><input name="csrfmiddlewaretoken" value="CKFQ1WOx9cF2g7RYMsPFnBJCS4SnJbFg" type="hidden"></div>
+</div>
+
+
+
+
+<div class="x-panel x-panel-default" style="width:600px;height:300px;" id="form-1011"><div style="width: 600px; right: auto; left: 0px; top: 0px;" class="x-panel-header x-header x-header-horizontal x-docked x-unselectable x-panel-header-default x-horizontal x-panel-header-horizontal x-panel-header-default-horizontal x-top x-panel-header-top x-panel-header-default-top x-docked-top x-panel-header-docked-top x-panel-header-default-docked-top" id="form-1011_header"><div style="width: 588px;" id="form-1011_header-body" class="x-header-body x-panel-header-body x-panel-header-body-default x-panel-header-body-horizontal x-panel-header-body-default-horizontal x-panel-header-body-top x-panel-header-body-default-top x-panel-header-body-docked-top x-panel-header-body-default-docked-top x-box-layout-ct x-panel-header-body-default-horizontal x-panel-header-body-default-top x-panel-header-body-default-docked-top"><div style="width: 588px; height: 16px;" id="form-1011_header-innerCt" class="x-box-inner " role="presentation"><div style="width: 588px;" id="form-1011_header-targetEl" class="x-box-target"><div style="right: auto; left: 0px; top: 0px; margin: 0px; width: 588px;" class="x-component x-header-text-container x-panel-header-text-container x-panel-header-text-container-default x-box-item x-component-default" unselectable="on" id="form-1011_header_hd"><span id="form-1011_header_hd-textEl" class="x-header-text x-panel-header-text" unselectable="on">TITRE A CHANGER</span></div></div></div></div></div><div id="form-1011-body" class="x-panel-body x-panel-body-default x-panel-body-default" style="padding: 0px; width: 600px; left: 0px; top: 25px; height: 246px;"><span id="form-1011-outerCt" style="display: table; width: 100%; table-layout: fixed; height: 100%;"><div id="form-1011-innerCt" style="display:table-cell;height:100%;vertical-align:top;padding:10px 10px 10px 10px" class=""><table style="table-layout: fixed;" class="x-field x-table-plain x-form-item x-field-default x-anchor-form-item" id="textfield-1012" cellpadding="0"><tbody><tr id="textfield-1012-inputRow"><td id="textfield-1012-labelCell" style="" halign="left" class="x-field-label-cell" valign="top" width="105"><label id="textfield-1012-labelEl" for="textfield-1012-inputEl" class="x-form-item-label x-unselectable x-form-item-label-left" style="width:100px;margin-right:5px;" unselectable="on">Code Contact:</label></td><td style="width: 150px;" class="x-form-item-body " id="textfield-1012-bodyEl" colspan="2" role="presentation"><input style="width: 100%;" data-errorqtip="" aria-invalid="false" id="textfield-1012-inputEl" size="1" name="cod_contact" class="x-form-field x-form-text  " autocomplete="off" type="text"></td></tr></tbody></table><table style="table-layout: fixed;" class="x-field x-table-plain x-form-item x-field-default x-anchor-form-item" id="textfield-1013" cellpadding="0"><tbody><tr id="textfield-1013-inputRow"><td id="textfield-1013-labelCell" style="" halign="left" class="x-field-label-cell" valign="top" width="105"><label id="textfield-1013-labelEl" for="textfield-1013-inputEl" class="x-form-item-label x-unselectable x-form-item-label-left" style="width:100px;margin-right:5px;" unselectable="on">Nom du Contact:</label></td><td style="width: 150px;" class="x-form-item-body " id="textfield-1013-bodyEl" colspan="2" role="presentation"><input style="width: 100%;" data-errorqtip="" aria-invalid="false" id="textfield-1013-inputEl" size="1" name="nom_contact" class="x-form-field x-form-text  " autocomplete="off" type="text"></td></tr></tbody></table><table style="table-layout: fixed;" class="x-field x-table-plain x-form-item x-field-default x-anchor-form-item" id="textfield-1014" cellpadding="0"><tbody><tr id="textfield-1014-inputRow"><td id="textfield-1014-labelCell" style="" halign="left" class="x-field-label-cell" valign="top" width="105"><label id="textfield-1014-labelEl" for="textfield-1014-inputEl" class="x-form-item-label x-unselectable x-form-item-label-left" style="width:100px;margin-right:5px;" unselectable="on">Description:</label></td><td style="width: 150px;" class="x-form-item-body " id="textfield-1014-bodyEl" colspan="2" role="presentation"><input style="width: 100%;" data-errorqtip="" aria-invalid="false" id="textfield-1014-inputEl" size="1" name="description" class="x-form-field x-form-text  " autocomplete="off" type="text"></td></tr></tbody></table><table style="table-layout: fixed;" class="x-field x-table-plain x-form-item x-field-default x-anchor-form-item" id="textfield-1015" cellpadding="0"><tbody><tr id="textfield-1015-inputRow"><td id="textfield-1015-labelCell" style="" halign="left" class="x-field-label-cell" valign="top" width="105"><label id="textfield-1015-labelEl" for="textfield-1015-inputEl" class="x-form-item-label x-unselectable x-form-item-label-left" style="width:100px;margin-right:5px;" unselectable="on">Telephone:</label></td><td style="width: 150px;" class="x-form-item-body " id="textfield-1015-bodyEl" colspan="2" role="presentation"><input style="width: 100%;" data-errorqtip="" aria-invalid="false" id="textfield-1015-inputEl" size="1" name="tel_contact" class="x-form-field x-form-text  " autocomplete="off" type="text"></td></tr></tbody></table><table style="table-layout: fixed;" class="x-field x-table-plain x-form-item x-field-default" id="combobox-1009" cellpadding="0"><tbody><tr id="combobox-1009-inputRow"><td id="combobox-1009-labelCell" style="" halign="left" class="x-field-label-cell" valign="top" width="105"><label id="combobox-1009-labelEl" for="combobox-1009-inputEl" class="x-form-item-label x-unselectable x-form-item-label-left" style="width:100px;margin-right:5px;" unselectable="on">Type de Contact:</label></td><td style="width: 150px;" class="x-form-item-body x-form-trigger-wrap-focus x-pickerfield-open" id="combobox-1009-bodyEl" colspan="2" role="presentation"><table style="width: 150px; table-layout: fixed;" id="combobox-1009-triggerWrap" class="x-form-trigger-wrap" cellpadding="0" cellspacing="0"><tbody><tr><td style="width: 100%;" id="combobox-1009-inputCell" class="x-form-trigger-input-cell"><div id="ext-gen1025" class="x-hide-display x-form-data-hidden" role="presentation"></div><input style="width: 100%;" data-errorqtip="" aria-invalid="false" id="combobox-1009-inputEl" class="x-form-field x-form-text x-form-focus x-field-form-focus x-field-default-form-focus" autocomplete="off" name="combobox-1009-inputEl" type="text"></td><td id="ext-gen1024" class=" x-trigger-cell x-unselectable" style="width:17px;" valign="top"><div id="ext-gen1023" class="x-trigger-index-0 x-form-trigger x-form-arrow-trigger x-form-trigger-first" role="button"></div></td></tr></tbody></table></td></tr></tbody></table></div></span></div><div style="width: 600px; right: auto; left: 0px; top: 271px;" class="x-toolbar x-docked x-toolbar-footer x-docked-bottom x-toolbar-docked-bottom x-toolbar-footer-docked-bottom x-box-layout-ct" id="toolbar-1016"><div style="width: 594px; height: 22px;" id="toolbar-1016-innerCt" class="x-box-inner " role="presentation"><div style="width: 594px;" id="toolbar-1016-targetEl" class="x-box-target"><div class="x-btn x-unselectable x-box-item x-toolbar-item x-btn-default-small x-noicon x-btn-noicon x-btn-default-small-noicon" style="border-width: 1px; right: auto; left: 513px; width: 75px; margin: 0px; top: 0px;" id="button-1017"><div id="button-1017-btnWrap" class="x-btn-wrap" unselectable="on"><a id="button-1017-btnEl" class="x-btn-button" role="button" hidefocus="on" unselectable="on" tabindex="0"><span id="button-1017-btnInnerEl" class="x-btn-inner x-btn-inner-center" unselectable="on">Submit</span><span role="img" id="button-1017-btnIconEl" class="x-btn-icon-el  " unselectable="on" style=""></span></a></div></div></div></div></div></div><div style="right: auto; left: 116px; top: 166px; height: auto; width: 150px; z-index: 19001;" tabindex="-1" class="x-boundlist x-boundlist-floating x-layer x-boundlist-default" id="boundlist-1018"><div id="boundlist-1018-listEl" class="x-boundlist-list-ct x-unselectable" style="overflow: auto; height: auto;"><ul class="x-list-plain"><li role="option" unselectable="on" class="x-boundlist-item x-boundlist-item-over"></li><li role="option" unselectable="on" class="x-boundlist-item"></li><li role="option" unselectable="on" class="x-boundlist-item"></li><li role="option" unselectable="on" class="x-boundlist-item"></li></ul></div></div></body></html>

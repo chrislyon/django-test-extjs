@@ -70,10 +70,11 @@ def page42(request):
     template = 'hello_extjs/page42.html'
     return render( request, template, { 'SCRIPT_EXTJS':S } )
 
-@csrf_exempt
+#@csrf_exempt
 def page43(request):
     if request.method == 'POST':
-        r = '{ success: false, msg: "OK A VENIR" }'
+        print request
+        r = '{ success: false, msg: "OK A VENIR " }'
         return HttpResponse(r, mimetype='application/json')
     else:
         f = ExtForm()
