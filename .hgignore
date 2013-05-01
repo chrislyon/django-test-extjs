@@ -2,8 +2,9 @@
 syntax: glob
 
 *.elc
-**.pyc
+*.pyc
 *~
+*/*.pyc
 
 # switch to regexp syntax.
 syntax: regexp
