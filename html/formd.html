@@ -43,17 +43,19 @@ Ext.BLANK_IMAGE_URL = '/static/static/ext-4.2.0.663/resources/images/default/s.g
         Ext.onReady(function() {
         var CSRF_TOKEN = Ext.util.Cookies.get('csrftoken');
         
-        var ST_typ_contact  = Ext.create('Ext.data.Store', {
-            fields: ['value', 'display'],
-            data : [ 
-            {'PRO':'PROFESSIONEL'},{'PERSO':'PERSONNEL'},{'VIP':'VIP'},{'AUTRE':'AUTRE'} 
-            ] });
         Ext.create('Ext.form.Panel', {renderTo: Ext.getBody(), url: '/formd/p1', height: 300, width: 600, bodyPadding: 10, title: 'TITRE A CHANGER', defaultType: 'textfield', 
             items: [
-            {"fieldLabel": "Code Contact", "name": "cod_contact"},{"fieldLabel": "Nom du Contact", "name": "nom_contact"},{"fieldLabel": "Description", "name": "description"},{"fieldLabel": "Telephone", "name": "tel_contact"},
-                Ext.create('Ext.form.ComboBox', {
+			{"fieldLabel": "Code Contact", "name": "cod_contact"},
+			{"fieldLabel": "Nom du Contact", "name": "nom_contact"},
+			{"fieldLabel": "Description", "name": "description"},{"fieldLabel": "Telephone", "name": "tel_contact"},
+                new Ext.create('Ext.form.ComboBox', {
                     fieldLabel: 'Type de Contact',
-                    store: ST_typ_contact,
+					store: new Ext.create('Ext.data.Store', {
+						fields: ['value', 'display'],
+						data : [ 
+						{'PRO':'PROFESSIONEL'},{'PERSO':'PERSONNEL'},{'VIP':'VIP'},{'AUTRE':'AUTRE'} 
+						] }),
+                    //store: ST_typ_contact,
                     queryMode: 'local',
                     displayField: 'display',
                     valueField: 'value',

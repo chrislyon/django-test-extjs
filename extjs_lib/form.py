@@ -111,15 +111,24 @@ class Zone(object):
     def to_form(self):
         if self.xtype == "combo":
             d = """
-                Ext.create('Ext.form.ComboBox', {
+            Ext.create('Ext.form.field.ComboBox', { 
+                fieldLabel: 'Colour', 
+                    store: ['Red', 'Yellow', 'Green', 'Brown', 'Blue', 'Pink', 'Black'] 
+                    })
+            """
+            s = """
+                new Ext.form.ComboBox({
                     fieldLabel: '%s',
-                    store: ST_%s,
+                    store: new Ext.data.Store({
+                                fields: ['value', 'display'],
+                                data : [ {'PRO':'PROFESSIONEL'},{'PERSO':'PERSONNEL'},{'VIP':'VIP'},{'AUTRE':'AUTRE'} 
+                                ] }),
                     queryMode: 'local',
                     displayField: 'display',
                     valueField: 'value',
                     renderTo: Ext.getBody()
                 })
-            """ % ( self.fieldLabel, self.name )
+            """ % ( self.fieldLabel )
             f = """
                 {   fieldLabel: '%s', 
                     name:'%s', 
