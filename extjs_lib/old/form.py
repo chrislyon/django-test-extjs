@@ -1,3 +1,4 @@
+
 ### ------------------
 ### FORMULAIRE EXTJS
 ### ------------------
@@ -36,6 +37,19 @@ class ExtForm(object):
         """
 
         S = ""
+        DEF_STORE = """
+        var %s  = Ext.create('Ext.data.Store', {
+            fields: ['value', 'display'],
+            data : [ 
+            %s 
+            ] });
+        """ 
+        combos = [ z for z in self.zones if z.xtype == 'combo' ]
+        for c in combos:
+            store_name = "ST_%s" % c.name
+            store_data = c.data_to_json()
+            S += DEF_STORE % ( store_name, store_data )
+
         S += "Ext.create('Ext.form.Panel', {"
         S += "renderTo: %s, " % self.renderTo
         S += "url: '%s', " % self.url
@@ -79,7 +93,7 @@ class ExtForm(object):
 
 class Zone(object):
     """
-        Zone/Champ du formulaire
+        Colonne de la grille
     """
     def __init__(self, name, **kwargs):
         self.name = name
@@ -90,24 +104,54 @@ class Zone(object):
         self.data = kwargs.get('data', None)
 
     def data_to_json(self):
-        T =  ','.join([ "{value:'%s',display:'%s'}" % d for d in self.data ])
+        T =  ','.join([ "{'%s':'%s'}" % d for d in self.data ])
+        #T = "{"+T+"}"
         return T
 
     def to_form(self):
         if self.xtype == "combo":
             d = """
             Ext.create('Ext.form.field.ComboBox', { 
-                    fieldLabel: '%s', 
-                    name:'%s', 
+                fieldLabel: 'Colour', 
+                    store: ['Red', 'Yellow', 'Green', 'Brown', 'Blue', 'Pink', 'Black'] 
+                    })
+            """
+            d = """
+            Ext.create('Ext.form.field.ComboBox', { 
+                fieldLabel: 'Colour', 
                     store: {
                         fields: ['value', 'display'],
-                        data : [ %s ]
+                        data : [ {value:'PRO',display:'PROFESSIONEL'},{value:'PERSO',display:'PERSONNEL'},
+                            {value:'VIP',display:'VIP'},{value:'AUTRE',display:'AUTRE'} ]
                         },
                     queryMode: 'local',
                     displayField: 'display',
                     valueField: 'value'
                     })
-            """ % ( self.fieldLabel, self.name, self.data_to_json() )
+            """
+            s = """
+                new Ext.form.ComboBox({
+                    fieldLabel: '%s',
+                    store: new Ext.data.Store({
+                                fields: ['value', 'display'],
+                                data : [ {'PRO':'PROFESSIONEL'},{'PERSO':'PERSONNEL'},{'VIP':'VIP'},{'AUTRE':'AUTRE'} 
+                                ] }),
+                    queryMode: 'local',
+                    displayField: 'display',
+                    valueField: 'value',
+                    renderTo: Ext.getBody()
+                })
+            """ % ( self.fieldLabel )
+            f = """
+                {   fieldLabel: '%s', 
+                    name:'%s', 
+                    xtype:'combo', 
+                    store:ST_%s,
+                    queryMode: 'local',
+                    displayField: 'display',
+                    valueField: 'value',
+                }
+                """ % ( self.fieldLabel, self.name, self.name )
             return d
         else:
             d = { 'fieldLabel':self.fieldLabel, 'name':self.name }
