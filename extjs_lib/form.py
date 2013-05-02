@@ -116,6 +116,19 @@ class Zone(object):
                     store: ['Red', 'Yellow', 'Green', 'Brown', 'Blue', 'Pink', 'Black'] 
                     })
             """
+            d = """
+            Ext.create('Ext.form.field.ComboBox', { 
+                fieldLabel: 'Colour', 
+                    store: {
+                        fields: ['value', 'display'],
+                        data : [ {value:'PRO',display:'PROFESSIONEL'},{value:'PERSO',display:'PERSONNEL'},
+                            {value:'VIP',display:'VIP'},{value:'AUTRE',display:'AUTRE'} ]
+                        },
+                    queryMode: 'local',
+                    displayField: 'display',
+                    valueField: 'value'
+                    })
+            """
             s = """
                 new Ext.form.ComboBox({
                     fieldLabel: '%s',
