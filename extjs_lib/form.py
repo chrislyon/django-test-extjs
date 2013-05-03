@@ -17,6 +17,7 @@ class ExtForm(object):
         self.renderTo = 'Ext.getBody()'
         self.mode = 'cr'
         self.url = '/'
+        self.url_annul = '/'
         self.defaultType = 'textfield'
         self.zones = []
         self.data = []
@@ -33,6 +34,7 @@ class ExtForm(object):
         Ext.require('Ext.form.field.Date');
         Ext.onReady(function() {
         var CSRF_TOKEN = Ext.util.Cookies.get('csrftoken');
+        Ext.tip.QuickTipManager.init();  // enable tooltips
         """
 
         S = ""
@@ -41,6 +43,7 @@ class ExtForm(object):
         S += "url: '%s', " % self.url
         S += "height: %s, " % self.height
         S += "width: %s, " % self.width
+        S += "frame: true, "
         S += "bodyPadding: %s, " % self.bodyPadding
         S += "title: '%s', " % self.titre
         S += "defaultType: '%s', " % self.defaultType
@@ -63,17 +66,24 @@ class ExtForm(object):
                             Ext.Msg.alert('Success', action.result.msg);
                         },
                         failure: function(form, action) {
-                            Ext.Msg.alert('Failed', action.result.msg);
+                            Ext.Msg.alert('Failed', "ERREUR DJANGO");
                         }
                         });
                     } else { // display error alert if the data is invalid
                         Ext.Msg.alert('Invalid Data', 'Please correct form errors.')
                     }
                 }
-            }
+                },{ 
+                    text: 'Annulation',
+                    handler: function() { 
+                        // on part sur une autre page
+                        var redirect = '%s';
+                        window.location = redirect;
+                        }
+                }
             ]
             });
-        """
+        """ % self.url_annul
         F_FIN = "});"
         return F_DEBUT+S+F_FIN
 
@@ -85,6 +95,7 @@ class Zone(object):
         self.name = name
         self.fieldLabel = kwargs.get('fieldLabel', 'Zone %s ' % name )
         self.width = kwargs.get('width',100)
+        self.height = kwargs.get('width',None)
         self.hidden = kwargs.get('hidden', False)
         self.xtype = kwargs.get('xtype', None)
         self.data = kwargs.get('data', None)
@@ -108,6 +119,16 @@ class Zone(object):
                     valueField: 'value'
                     })
             """ % ( self.fieldLabel, self.name, self.data_to_json() )
+            return d
+        elif self.xtype == 'htmleditor':
+            d = """
+            Ext.create('Ext.form.field.HtmlEditor', { 
+                    fieldLabel: '%s', 
+                    name:'%s', 
+                    width: %s,
+                    height: %s
+                    })
+            """ % ( self.fieldLabel, self.name, self.width, self.height )
             return d
         else:
             d = { 'fieldLabel':self.fieldLabel, 'name':self.name }
