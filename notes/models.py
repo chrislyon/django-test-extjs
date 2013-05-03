@@ -12,12 +12,12 @@ STATUS_NOTES = (
 # Create your models here.
 class Note(models.Model):
     titre = models.CharField(_(u'Titre'),max_length=50)
-    description = models.TextField(_(u'Description'))
-    tag1 = models.CharField(_(u'Tag1'),max_length=20)
-    tag2 = models.CharField(_(u'Tag2'),max_length=20)
-    tag3 = models.CharField(_(u'Tag3'),max_length=20)
-    tag4 = models.CharField(_(u'Tag4'),max_length=20)
-    tag5 = models.CharField(_(u'Tag5'),max_length=20)
+    description = models.TextField(_(u'Description'),blank=True)
+    tag1 = models.CharField(_(u'Tag1'),max_length=20, blank=True)
+    tag2 = models.CharField(_(u'Tag2'),max_length=20, blank=True)
+    tag3 = models.CharField(_(u'Tag3'),max_length=20, blank=True)
+    tag4 = models.CharField(_(u'Tag4'),max_length=20, blank=True)
+    tag5 = models.CharField(_(u'Tag5'),max_length=20, blank=True)
     status = models.CharField(_(u'Status'), max_length=5, choices=STATUS_NOTES, default='OK' )
     date_cr = models.DateTimeField(auto_now_add=True)
     date_mo = models.DateTimeField(auto_now=True)
@@ -36,8 +36,8 @@ class Note(models.Model):
                         tag4 = self.tag4,
                         tag5 = self.tag5,
                         status = self.status,
-                        date_cr = self.date_cr,
-                        date_mo = self.date_mo
+                        date_cr = self.date_cr.strftime('%d/%m/%y %X'),
+                        date_mo = self.date_mo.strftime('%d/%m/%y %X')
                 )
 
 class NoteForm(ModelForm):

@@ -63,6 +63,7 @@ def liste(request):
         root_name = 'rows'
         data = '{"total": %s, "%s": %s}' % (total, root_name, simplejson.dumps(obj))
 
+        ## Pour debug
         #print data
         #print simplejson.dumps(data)
 
@@ -81,7 +82,7 @@ def liste(request):
         g.add_col( GridCol('tag5', text="Tag5", width=100, sortable=True) )
         g.add_col( GridCol('status', text='Status', width=100) )
         g.titre = "Liste des Notes"
-        g.width = 800 
+        g.width = 1000
         g.height = 400 
         g.pageSize = 10
         g.data_url = '/notes/'
@@ -93,7 +94,20 @@ def liste(request):
         template = 'notes/notes.html'
         return render( request, template, { 'SCRIPT_EXTJS':S } ) 
 
-#@csrf_exempt
+def get_form():
+    f = ExtForm()
+    f.width = 800
+    f.height = 400 
+    f.add_zone(Zone( 'titre', fieldLabel="Titre", width=500 ))
+    f.add_zone(Zone( 'tag1', fieldLabel="Tag1" ))
+    f.add_zone(Zone( 'tag2', fieldLabel="Tag2" ))
+    f.add_zone(Zone( 'tag3', fieldLabel="Tag3" ))
+    f.add_zone(Zone( 'tag4', fieldLabel="Tag4" ))
+    f.add_zone(Zone( 'tag5', fieldLabel="Tag5" ))
+    f.add_zone(Zone( 'status', fieldLabel="Status", xtype = "combo", data = STATUS_NOTES, def_value='OK' ))
+    f.add_zone(Zone( 'description', fieldLabel="Description", xtype = 'htmleditor', width=700, height=300 ))
+    return f
+
 def create(request):
     form = NoteForm
     if request.method == 'POST':
@@ -103,26 +117,47 @@ def create(request):
             f.save()
             r = '{ success: true, msg: "OK A VENIR " }'
         else:
-            r = '{ success: false, msg: "ERREUR DJANGO" }'
+            r = '{ success: false, msg: "Form Invalid" }'
         print r
         return HttpResponse(r, mimetype='application/json')
     else:
-        f = ExtForm()
+        f = get_form()
         f.url = '/notes/cr/'
         f.url_annul = '/notes/'
         f.titre = "Creation"
-        f.width = 800 
-        f.height = 400 
-        f.add_zone(Zone( 'titre', fieldLabel="Titre", width=500 ))
-        f.add_zone(Zone( 'tag1', fieldLabel="Tag1" ))
-        f.add_zone(Zone( 'tag2', fieldLabel="Tag1" ))
-        f.add_zone(Zone( 'tag3', fieldLabel="Tag1" ))
-        f.add_zone(Zone( 'tag4', fieldLabel="Tag1" ))
-        f.add_zone(Zone( 'tag5', fieldLabel="Tag1" ))
-        f.add_zone(Zone( 'status', fieldLabel="Status", xtype = "combo", data = STATUS_NOTES ))
-        f.add_zone(Zone( 'description', fieldLabel="Description", xtype = 'htmleditor', width=700, height=300 ))
         S = f.render()
 
         template = 'notes/notes.html'
         return render( request, template, { 'SCRIPT_EXTJS':S } )
 
+def delete(request, enreg_id):
+    model = Note
+    print request
+    if request.method == 'POST':
+        if request.POST['VALID'] == 'VALID':
+            a = model.objects.get(id=enreg_id).delete()
+            r = '{ success: true }'
+        else:
+            ## Bouton ANNUL
+            r = '{ success: false }'
+        print r
+        return HttpResponse(r, mimetype='application/json')
+    else:
+        obj = model.objects.get(pk=enreg_id)
+        f = get_form()
+        f.url = '/notes/del/%s' % enreg_id
+        f.url_annul = '/notes/'
+        f.titre = "Annulation"
+        f.mode = 'del'
+        f.mod_zone( 'titre', 'def_value', obj.titre )
+        f.mod_zone( 'tag1', 'def_value', obj.tag1 )
+        f.mod_zone( 'tag2', 'def_value', obj.tag2 )
+        f.mod_zone( 'tag3', 'def_value', obj.tag3 )
+        f.mod_zone( 'tag4', 'def_value', obj.tag4 )
+        f.mod_zone( 'tag5', 'def_value', obj.tag5 )
+        f.mod_zone( 'status', 'def_value', obj.status )
+        f.mod_zone( 'description', 'def_value', obj.description )
+        S = f.render()
+
+        template = 'notes/notes.html'
+        return render( request, template, { 'SCRIPT_EXTJS':S } )
