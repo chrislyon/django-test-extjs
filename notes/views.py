@@ -130,10 +130,12 @@ def create(request):
         template = 'notes/notes.html'
         return render( request, template, { 'SCRIPT_EXTJS':S } )
 
+#@csrf_exempt
 def delete(request, enreg_id):
     model = Note
-    print request
     if request.method == 'POST':
+        #print request
+        #pdb.set_trace()
         if request.POST['VALID'] == 'VALID':
             a = model.objects.get(id=enreg_id).delete()
             r = '{ success: true }'

@@ -75,14 +75,15 @@ class ExtForm(object):
                         Ext.Ajax.request({
                             method: 'POST',
                             url: '%s/',
-                            jsonData: [{ VALID:'VALID', 'csrfmiddlewaretoken':CSRF_TOKEN }],
+                            // Le passage de parametre doit se faire comme cela
+                            params: {VALID:'VALID', 'csrfmiddlewaretoken':CSRF_TOKEN},
                             success: function() {
-                                    Ext.Msg.alert('ANNULATION EFFECTUEE');
+                                    Ext.Msg.alert('Succes', 'ANNULATION EFFECTUEE');
                                     var redirect = '%s';
                                     window.location = redirect;
                                     },
                             failure: function() {
-                                    Ext.Msg.alert('ERREUR SERVEUR');
+                                    Ext.Msg.alert('Failure', 'ERREUR SERVEUR');
                                     var redirect = '%s';
                                     window.location = redirect;
                                     }
