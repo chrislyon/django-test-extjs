@@ -69,27 +69,37 @@ class ExtForm(object):
         """
         if self.mode == 'del':
             S += """
-                {
-                    text: 'Confirmer ANNULATION',
-                    handler: function() {
-                        Ext.Ajax.request({
-                            method: 'POST',
-                            url: '%s/',
-                            // Le passage de parametre doit se faire comme cela
-                            params: {VALID:'VALID', 'csrfmiddlewaretoken':CSRF_TOKEN},
-                            success: function() {
-                                    Ext.Msg.alert('Succes', 'ANNULATION EFFECTUEE');
-                                    var redirect = '%s';
-                                    window.location = redirect;
-                                    },
-                            failure: function() {
-                                    Ext.Msg.alert('Failure', 'ERREUR SERVEUR');
-                                    var redirect = '%s';
-                                    window.location = redirect;
-                                    }
+            {
+                text: 'Delete',
+                    formBind: true,
+                    handler: function(){
+                            var form = this.up('form').getForm(); // get the basic form
+                            if(form.isValid()){
+                                    form.submit({
+                                            url: '%s/',
+                                            //waitMsg: 'Submitting your data...',
+                                            success: function(form, action){
+                                                // server responded with success = true
+                                                // var result = action.result;
+                                                alert("Effacement Confirme");
+                                                var redirect = '%s';
+                                                window.location = redirect;
+                                                },
+                                            failure: function(form, action){
+                                                if (action.failureType === Ext.form.action.Action.CONNECT_FAILURE) {
+                                                    Ext.Msg.alert('Error',
+                                                        'Status:'+action.response.status+': '+
+                                                        action.response.statusText);
+                                                    }
+                                                if (action.failureType === Ext.form.action.Action.SERVER_INVALID){
+                                                    // server responded with success = false
+                                                    Ext.Msg.alert('Invalid', action.result.errormsg);
+                                                    }
+                                                }
+                                            })
                                 }
-                            )}
-                """ % ( self.url, self.url_annul, self.url_annul )
+                            }
+            """ % ( self.url, self.url_annul )
         else:
             S += """
                 {

@@ -134,7 +134,7 @@ def create(request):
 def delete(request, enreg_id):
     model = Note
     if request.method == 'POST':
-        #print request
+        print request
         #pdb.set_trace()
         if request.POST['VALID'] == 'VALID':
             a = model.objects.get(id=enreg_id).delete()
@@ -159,6 +159,8 @@ def delete(request, enreg_id):
         f.mod_zone( 'tag5', 'def_value', obj.tag5 )
         f.mod_zone( 'status', 'def_value', obj.status )
         f.mod_zone( 'description', 'def_value', obj.description )
+        f.add_zone(Zone( 'VALID', fieldLabel="VALID", xtype='hidden', def_value='VALID' ))
+
         S = f.render()
 
         template = 'notes/notes.html'
