@@ -70,7 +70,7 @@ class ExtForm(object):
         if self.mode == 'del':
             S += """
             {
-                text: 'Delete',
+                text: 'Confirmer la suppression',
                     formBind: true,
                     handler: function(){
                             var form = this.up('form').getForm(); // get the basic form
@@ -149,6 +149,7 @@ class Zone(object):
         self.width = kwargs.get('width',200)
         self.height = kwargs.get('height',None)
         self.hidden = kwargs.get('hidden', False)
+        self.readOnly = kwargs.get('readOnly', False)
         self.xtype = kwargs.get('xtype', None)
         self.data = kwargs.get('data', None)
         self.def_value = kwargs.get('def_value', None)
@@ -169,10 +170,11 @@ class Zone(object):
                         },
                     queryMode: 'local',
                     displayField: 'display',
+                    readOnly: %s,
                     valueField: 'value',
                     value: '%s'
                     })
-            """ % ( self.fieldLabel, self.name, self.data_to_json(), self.def_value )
+            """ % ( self.fieldLabel, self.name, self.data_to_json(), str(self.readOnly).lower(), self.def_value )
             return d
         elif self.xtype == 'htmleditor':
             d = """
@@ -180,12 +182,13 @@ class Zone(object):
                     fieldLabel: '%s', 
                     name:'%s', 
                     width: %s,
-                    height: %s
+                    height: %s,
+                    readOnly: %s
                     })
-            """ % ( self.fieldLabel, self.name, self.width, self.height )
+            """ % ( self.fieldLabel, self.name, self.width, self.height, str(self.readOnly).lower() )
             return d
         else:
-            d = { 'fieldLabel':self.fieldLabel, 'name':self.name, 'width': self.width }
+            d = { 'fieldLabel':self.fieldLabel, 'name':self.name, 'width': self.width, 'readOnly':self.readOnly }
         return simplejson.dumps(d)
 
 

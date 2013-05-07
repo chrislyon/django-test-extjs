@@ -152,13 +152,21 @@ def delete(request, enreg_id):
         f.titre = "Annulation"
         f.mode = 'del'
         f.mod_zone( 'titre', 'def_value', obj.titre )
+        f.mod_zone( 'titre', 'readOnly', True )
         f.mod_zone( 'tag1', 'def_value', obj.tag1 )
+        f.mod_zone( 'tag1', 'readOnly', True )
         f.mod_zone( 'tag2', 'def_value', obj.tag2 )
+        f.mod_zone( 'tag2', 'readOnly', True )
         f.mod_zone( 'tag3', 'def_value', obj.tag3 )
+        f.mod_zone( 'tag3', 'readOnly', True )
         f.mod_zone( 'tag4', 'def_value', obj.tag4 )
+        f.mod_zone( 'tag4', 'readOnly', True )
         f.mod_zone( 'tag5', 'def_value', obj.tag5 )
+        f.mod_zone( 'tag5', 'readOnly', True )
         f.mod_zone( 'status', 'def_value', obj.status )
+        f.mod_zone( 'status', 'readOnly', True )
         f.mod_zone( 'description', 'def_value', obj.description )
+        f.mod_zone( 'description', 'readOnly', True )
         f.add_zone(Zone( 'VALID', fieldLabel="VALID", xtype='hidden', def_value='VALID' ))
 
         S = f.render()
