@@ -7,6 +7,7 @@ from django.conf.urls import patterns, include, url
 urlpatterns = patterns('hello_extjs.views',
     (r'^$', 'index'),
     (r'^p1$', 'page1'),
+    (r'^p2$', 'page2'),
     (r'^p5$', 'page5'),
     (r'^p41$', 'page41'),
     (r'^p42$', 'page42'),

@@ -2,6 +2,12 @@
 ### FORMULAIRE EXTJS
 ### ------------------
 
+##
+## Probleme avec extjs 4
+## => Dans la gestion des boutons
+## si j'ai une redirection apres un message 
+## alors pas d'attente pour le msg.alert
+
 import sys
 from django.utils import simplejson
 
@@ -119,7 +125,7 @@ class ExtForm(object):
                             Ext.Msg.alert('Invalid Data', 'Please correct form errors.')
                         }
                     }
-                """
+                """ % self.url_annul
         ## Dans tout les cas
         S += """
                 },{ 

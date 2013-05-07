@@ -60,7 +60,7 @@ Ext.onReady(function(){
 		width: 800,
 		height: 500,
 		frame: true,
-		title: 'Titre de la grille'
+		title: 'Titre de la grille + TEST LAYOUT'
 	});
 
 	var toolbar = monGridPanel.getTopToolbar();

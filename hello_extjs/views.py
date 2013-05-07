@@ -26,6 +26,9 @@ def page1(request):
     else:
         return render_to_response('hello_extjs/page1.html')
 
+def page2(request):
+    return render_to_response('hello_extjs/page2.html')
+
 def page5(request):
     return render_to_response('hello_extjs/page5.html')
 
