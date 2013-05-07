@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>ExtJS4 Viewport Example</title>
+<link rel="stylesheet" type="text/css" href="http://cdn.sencha.io/ext-4.0.2a/resources/css/ext-all.css" />  
+<script type="text/javascript" charset="utf-8" src="http://cdn.sencha.io/ext-4.0.2a/ext-all.js"></script>
+
+<script>
+Ext.application({
+	name: 'View Port',
+	launch: function() { 
+		Ext.create('Ext.container.Viewport', { 
+			layout: 'border', 
+			items: [{
+				region: 'north',
+				border: false, 
+				height: 24, 
+				tbar: [{
+					text: 'New',
+					menu: [{
+						text: 'Add New X',
+						handler: function() { // adding a handler to "Add New X" menu item 
+							Ext.Msg.alert('Alert', 'Add new X item!'); 
+						}	
+					}, {
+						text: 'Add New Y'
+					}]
+				}, {
+					text: 'Refresh'
+				}, {
+					text: 'Tools'
+				}, '->', {
+					text: 'Options',
+					iconCls: 'options_icon',
+					menu: [{
+						text: 'User Info'
+					}, {
+						text: 'Settings'
+					}, {
+						text: 'Switch Theme'
+					}]
+				}, {
+					text: 'Help'
+				}, '-', {
+					text: 'Logout'
+				}]
+			}, { 
+				region: 'west',
+				//collapsible: true, 
+				split: true,
+				title: 'Navigation',
+				width: 150
+				// could use a TreePanel or AccordionLayout for navigational items
+			}, {
+				region: 'south', 
+				height: 26, 
+				/*
+				bbar: [ // Bottom Bar 
+				  	{ xtype: 'button', text: 'Button 1' } 
+				]
+				*/	
+				dockedItems: [{
+					xtype: 'toolbar',
+					dock: 'bottom',	
+					items: [
+						{
+							xtype: 'button',
+							text: 'Show Warning & Clear',
+							handler: function (){
+								var sb = Ext.getCmp('basic-statusbar');
+								sb.setStatus({
+									text: 'Oops!',
+									iconCls: 'x-status-error',
+									clear: true // auto-clear after a set interval
+								});
+							}
+						},
+						{
+							xtype: 'button',
+							text: 'Show Busy',
+							handler: function (){
+								var sb = Ext.getCmp('basic-statusbar');
+								// Set the status bar to show that something is processing:
+								sb.showBusy();
+							}
+						},
+						{
+							xtype: 'button',
+							text: 'Clear status',
+							handler: function (){
+								var sb = Ext.getCmp('basic-statusbar');
+								// once completed
+								sb.clearStatus(); 
+							}
+						},
+						'-',
+						'Plain Text'
+					]
+				}]
+				
+			}, {
+				region: 'east',
+				title: 'East Panel',
+				collapsible: true,
+				split: true,
+				width: 150 
+			}, { 
+				region: 'center',
+				xtype: 'tabpanel', // TabPanel itself has no title
+				activeTab: 0,      // First tab active by default
+				autoScroll: true, 
+				items: {
+					title: 'Default Tab',
+					html: 'The first tab\'s content. Others may be added dynamically'
+				}
+			}]
+		});
+	}
+});
+</script>
+</head>
+
+<body></body>
+</html>
+
