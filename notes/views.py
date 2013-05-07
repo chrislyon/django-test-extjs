@@ -12,6 +12,9 @@ from django.views.decorators.csrf import csrf_exempt
 
 import pdb
 
+## -----------------------
+## La liste de depart
+## -----------------------
 def liste(request):
     if request.method == 'POST':
         ## --------------------------------------
@@ -94,6 +97,9 @@ def liste(request):
         template = 'notes/notes.html'
         return render( request, template, { 'SCRIPT_EXTJS':S } ) 
 
+## ---------------------------------
+## Constitution de la form de base
+## ---------------------------------
 def get_form():
     f = ExtForm()
     f.width = 800
@@ -108,6 +114,9 @@ def get_form():
     f.add_zone(Zone( 'description', fieldLabel="Description", xtype = 'htmleditor', width=700, height=300 ))
     return f
 
+## ---------------------------------
+## La creation d'un enregistrement
+## ---------------------------------
 def create(request):
     form = NoteForm
     if request.method == 'POST':
@@ -130,13 +139,15 @@ def create(request):
         template = 'notes/notes.html'
         return render( request, template, { 'SCRIPT_EXTJS':S } )
 
-#@csrf_exempt
+## -----------------
+## L'effacement
+## -----------------
 def delete(request, enreg_id):
     model = Note
     if request.method == 'POST':
         print request
         #pdb.set_trace()
-        if request.POST['VALID'] == 'VALID':
+        if request.POST['DELETE'] == 'VALID':
             a = model.objects.get(id=enreg_id).delete()
             r = '{ success: true }'
         else:
@@ -167,7 +178,52 @@ def delete(request, enreg_id):
         f.mod_zone( 'status', 'readOnly', True )
         f.mod_zone( 'description', 'def_value', obj.description )
         f.mod_zone( 'description', 'readOnly', True )
-        f.add_zone(Zone( 'VALID', fieldLabel="VALID", xtype='hidden', def_value='VALID' ))
+        f.add_zone(Zone( 'DELETE', fieldLabel="VALID", xtype='hidden', def_value='VALID' ))
+
+        S = f.render()
+
+        template = 'notes/notes.html'
+        return render( request, template, { 'SCRIPT_EXTJS':S } )
+
+## -------------------
+## La modification
+## -------------------
+def modif(request, enreg_id):
+    model = Note
+    form = NoteForm
+    if request.method == 'POST':
+        #print request
+        #pdb.set_trace()
+        if request.POST['MODIF'] == 'VALID':
+            a = model.objects.get(id=enreg_id)
+            f = form(request.POST, instance=a)
+            if f.is_valid():
+                f.save()
+                r = '{ success: true, msg: "OK A VENIR " }'
+            else:
+                r = '{ success: false, msg: "Form Invalid" }'
+        else:
+            ## Bouton ANNUL
+            r = '{ success: false }'
+        print r
+        return HttpResponse(r, mimetype='application/json')
+    else:
+        obj = model.objects.get(pk=enreg_id)
+        f = get_form()
+        f.url = '/notes/mod/%s/' % enreg_id
+        f.url_annul = '/notes/'
+        f.titre = "Modification de %s" % enreg_id
+        f.mode = 'mod'
+        f.mod_zone( 'titre', 'def_value', obj.titre )
+        f.mod_zone( 'tag1', 'def_value', obj.tag1 )
+        f.mod_zone( 'tag2', 'def_value', obj.tag2 )
+        f.mod_zone( 'tag3', 'def_value', obj.tag3 )
+        f.mod_zone( 'tag4', 'def_value', obj.tag4 )
+        f.mod_zone( 'tag5', 'def_value', obj.tag5 )
+        f.mod_zone( 'status', 'def_value', obj.status )
+        f.mod_zone( 'description', 'def_value', obj.description )
+        f.mod_zone( 'description', 'readOnly', True )
+        f.add_zone(Zone( 'MODIF', fieldLabel="VALID", xtype='hidden', def_value='VALID' ))
 
         S = f.render()
 

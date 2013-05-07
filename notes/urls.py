@@ -9,4 +9,5 @@ urlpatterns = patterns('notes.views',
     (r'^liste$', 'liste'),                  
     (r'^cr/$', 'create'),                  
     (r'^del/(\d+)/$', 'delete'),
+    (r'^mod/(\d+)/$', 'modif'),
 )
