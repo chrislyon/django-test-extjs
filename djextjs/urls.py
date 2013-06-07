@@ -20,5 +20,5 @@ urlpatterns = patterns('',
     url(r'^listed/', include('listed.urls')),
     url(r'^formd/', include('formd.urls')),
     url(r'^notes/', include('notes.urls')),
-    url(r'^stask/', include('stask.urls')),
+    url(r'^n2/', include('n2.urls')),
 )

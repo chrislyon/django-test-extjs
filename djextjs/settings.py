@@ -130,7 +130,7 @@ INSTALLED_APPS = (
     'listed',
     'formd',
     'notes',
-    'stask',
+    'n2',
 )
 
 # A sample logging configuration. The only tangible logging
