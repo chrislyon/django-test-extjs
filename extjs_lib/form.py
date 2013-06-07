@@ -125,7 +125,8 @@ class ExtForm(object):
                             Ext.Msg.alert('Invalid Data', 'Please correct form errors.')
                         }
                     }
-                """ % self.url_annul
+                """
+                #""" % self.url_annul
         ## Dans tout les cas
         S += """
                 },{ 
@@ -144,6 +145,44 @@ class ExtForm(object):
                 S += "form.getForm().findField('%s').setValue('%s');\n" % (z.name, z.def_value)
         F_FIN = "});"
         return F_DEBUT+S+F_FIN
+
+class ZBox(object):
+    """
+        Container de zone
+    """
+    def __init__(self, name, **kwargs):
+        self.name = name
+        self.title = name
+        self.layout = kwargs.get('layout','hbox')
+        self.zones = []
+        self.def_value = False
+        self.dzones = {}
+
+    def add_zone(self, zone):
+        self.zones.append(zone)
+        self.dzones[zone.name] = zone
+
+    def mod_zone(self, k, attr, val):
+        if k in self.dzones:
+            t = self.dzones[k]
+            try:
+                setattr(t, attr, val)
+            except:
+                pass
+
+    def to_form(self):
+        R = ''
+        R += "{ xtype: 'container', defaultType: 'textfield', layout: '%s'," % self.layout
+        R += """
+            items: [
+            """
+        R +=  ",".join([ c.to_form() for c in self.zones ])
+        R += """
+            ]
+            """
+        R += "}"
+        return R
+
 
 class Zone(object):
     """
@@ -217,6 +256,11 @@ def test():
     f.add_zone(Zone( 'prenom', fieldLabel="Prenom" ))
     f.add_zone(Zone( 'description', fieldLabel="Commentaire" ))
     f.add_zone(Zone( 'typ_contact', fieldLabel="Type Contact", xtype='combo', data = TYP_CTC ))
+    ZB = ZBox( 'Tags en Hbox', layout='hbox' )
+    ZB.add_zone(Zone( 'Tag1', fieldLabel="Tag1" ))
+    ZB.add_zone(Zone( 'Tag1', fieldLabel="Tag2" ))
+    ZB.add_zone(Zone( 'Tag1', fieldLabel="Tag3" ))
+    f.add_zone(ZB)
     print f.render()
 
 

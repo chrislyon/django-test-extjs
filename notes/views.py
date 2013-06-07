@@ -5,7 +5,7 @@ from django.shortcuts import render, render_to_response, HttpResponse
 from django.shortcuts import HttpResponseRedirect
 
 from extjs_lib.grid import ExtGrid, GridCol
-from extjs_lib.form import ExtForm, Zone
+from extjs_lib.form import ExtForm, Zone, ZBox
 from notes.models import Note, NoteForm, STATUS_NOTES
 
 from django.views.decorators.csrf import csrf_exempt
@@ -102,14 +102,16 @@ def liste(request):
 ## ---------------------------------
 def get_form():
     f = ExtForm()
-    f.width = 800
+    f.width = 1000
     f.height = 400 
     f.add_zone(Zone( 'titre', fieldLabel="Titre", width=500 ))
-    f.add_zone(Zone( 'tag1', fieldLabel="Tag1" ))
-    f.add_zone(Zone( 'tag2', fieldLabel="Tag2" ))
-    f.add_zone(Zone( 'tag3', fieldLabel="Tag3" ))
-    f.add_zone(Zone( 'tag4', fieldLabel="Tag4" ))
-    f.add_zone(Zone( 'tag5', fieldLabel="Tag5" ))
+    ZB = ZBox( 'Tags', layout='hbox' )
+    ZB.add_zone(Zone( 'tag1', fieldLabel="Tag1" ))
+    ZB.add_zone(Zone( 'tag2', fieldLabel="Tag2" ))
+    ZB.add_zone(Zone( 'tag3', fieldLabel="Tag3" ))
+    ZB.add_zone(Zone( 'tag4', fieldLabel="Tag4" ))
+    ZB.add_zone(Zone( 'tag5', fieldLabel="Tag5" ))
+    f.add_zone(ZB)
     f.add_zone(Zone( 'status', fieldLabel="Status", xtype = "combo", data = STATUS_NOTES, def_value='OK' ))
     f.add_zone(Zone( 'description', fieldLabel="Description", xtype = 'htmleditor', width=700, height=300 ))
     return f
