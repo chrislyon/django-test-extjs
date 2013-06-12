@@ -105,7 +105,7 @@ def get_form():
     f.width = 1000
     f.height = 400 
     f.add_zone(Zone( 'titre', fieldLabel="Titre", width=500 ))
-    ZB = ZBox( 'Tags', layout='hbox' )
+    ZB = ZBox( 'Tags', layout='hbox', xtype='fieldcontainer', hideLabel=True )
     ZB.add_zone(Zone( 'tag1', fieldLabel="Tag1" ))
     ZB.add_zone(Zone( 'tag2', fieldLabel="Tag2" ))
     ZB.add_zone(Zone( 'tag3', fieldLabel="Tag3" ))

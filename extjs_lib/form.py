@@ -154,6 +154,8 @@ class ZBox(object):
         self.name = name
         self.title = name
         self.layout = kwargs.get('layout','hbox')
+        self.xtype = kwargs.get('xtype','container')
+        self.hideLabel = kwargs.get('hideLabel',False)
         self.zones = []
         self.def_value = False
         self.dzones = {}
@@ -172,14 +174,20 @@ class ZBox(object):
 
     def to_form(self):
         R = ''
-        R += "{ xtype: 'container', defaultType: 'textfield', layout: '%s'," % self.layout
+        R += "{ xtype: '%s', defaultType: 'textfield', layout: '%s'," % (self.xtype, self.layout)
         R += """
             items: [
             """
         R +=  ",".join([ c.to_form() for c in self.zones ])
-        R += """
-            ]
-            """
+        if self.hideLabel:
+            R += """
+                ],
+                """
+            R += " defaults: { hideLabel: 'true' }"
+        else:
+            R += """
+                ]
+                """
         R += "}"
         return R
 
