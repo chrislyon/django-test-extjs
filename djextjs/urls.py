@@ -21,4 +21,5 @@ urlpatterns = patterns('',
     url(r'^formd/', include('formd.urls')),
     url(r'^notes/', include('notes.urls')),
     url(r'^n2/', include('n2.urls')),
+    url(r'^tt/', include('tt.urls')),
 )

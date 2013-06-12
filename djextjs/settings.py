@@ -131,6 +131,7 @@ INSTALLED_APPS = (
     'formd',
     'notes',
     'n2',
+    'tt',
 )
 
 # A sample logging configuration. The only tangible logging

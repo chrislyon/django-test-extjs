@@ -103,6 +103,10 @@ class ExtGrid(object):
         grid_debut += "width: %s," % self.width
         grid_debut += "height: %s," % self.height
         grid_debut += "title: '%s'," % self.titre
+        grid_debut += """
+            selType: 'cellmodel',
+            plugins: [ Ext.create('Ext.grid.plugin.CellEditing', { clicksToEdit: 1 }) ],
+        """
         grid_debut += "columns:["
         grid_fin = " });"
         scripts += grid_debut
@@ -168,6 +172,7 @@ class GridCol(object):
         self.hideable = kwargs.get('hideable', True)
         self.sortable = kwargs.get('sortable', False)
         self.renderer = kwargs.get('renderer', None)
+        self.editor = kwargs.get('editor', None)
 
     def to_grid(self):
         return simplejson.dumps(self.__dict__)
