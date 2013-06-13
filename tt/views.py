@@ -24,7 +24,7 @@ def liste(request):
         def_limit = 10
         ## Pour debug ( Err 500 :( )
         #pdb.set_trace()
-        #print request.POST
+        print request.POST
         start = request.POST.get('start', 0)
         limit = request.POST.get('limit', def_limit)
         tri = request.POST.get('sort', None)
@@ -88,6 +88,7 @@ def liste(request):
         g.base_url = '/tt'
         g.button_new_url = '/tt/cr'
         g.button_home = '/'
+        g.editing = True
         S = g.render()
         #print S
         template = 'tt/liste.html'

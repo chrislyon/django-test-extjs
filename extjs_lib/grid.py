@@ -23,6 +23,7 @@ class ExtGrid(object):
         self.button_new_url = self.base_url + '/cr'
         self.button_home = True
         self.button_home_url = '/'
+        self.editing = False
         self.cols = []
         self.data = []
 
@@ -67,32 +68,62 @@ class ExtGrid(object):
         ## Attention l'ordre des cols a de l'importance
         scripts += model % simplejson.dumps(self.liste_cols_name())
         ## Definition du store
-        store = """
-        var CSRF_TOKEN = Ext.util.Cookies.get('csrftoken');
-        var GStore = Ext.create('Ext.data.Store', {
-        model: GModel,
-        autoLoad: true,
-        remoteSort: true,
-        """
-        store += "pageSize: %s," % self.pageSize
-        proxy = """
-        proxy: {
-            type: 'ajax',
-            actionMethods:'POST',
-            url : '%s',
-            extraParams: {
-                    'csrfmiddlewaretoken':CSRF_TOKEN
-                    },
-            reader: {
-                type: 'json',
-                root: 'rows',
-                totalProperty: 'total'
+        if not self.editing:
+            store = """
+            var CSRF_TOKEN = Ext.util.Cookies.get('csrftoken');
+            var GStore = Ext.create('Ext.data.Store', {
+            model: GModel,
+            autoLoad: true,
+            remoteSort: true,
+            """
+            store += "pageSize: %s," % self.pageSize
+            proxy = """
+            proxy: {
+                type: 'ajax',
+                actionMethods:'POST',
+                url : '%s',
+                extraParams: {
+                        'csrfmiddlewaretoken':CSRF_TOKEN
+                        },
+                reader: {
+                    type: 'json',
+                    root: 'rows',
+                    totalProperty: 'total'
+                    }
                 }
-            }
-        """ % self.data_url
-        store += proxy
-        store += "});"
+            """ % self.data_url
+            store += proxy
+            store += "});"
+        else:
+            ## Store avec possibilite de sauvegarde
+            store = """
+            var CSRF_TOKEN = Ext.util.Cookies.get('csrftoken');
+            var GStore = Ext.create('Ext.data.Store', {
+            model: GModel,
+            autoLoad: true,
+            remoteSort: true,
+            """
+            store += "pageSize: %s," % self.pageSize
+            proxy = """
+            proxy: {
+                type: 'ajax',
+                actionMethods:'POST',
+                url : '%s',
+                extraParams: {
+                        'csrfmiddlewaretoken':CSRF_TOKEN
+                        },
+                reader: {
+                    type: 'json',
+                    root: 'rows',
+                    totalProperty: 'total'
+                    },
+                 writer: new Ext.data.JsonWriter( { encode: false, writeAllFields: true, listful: true })
+                }
+            """ % self.data_url
+            store += proxy
+            store += "});"
         #scripts += store % simplejson.dumps(self.data)
+        ## -----------
         scripts += store
         ## Definition de la grille
         grid_debut = """
@@ -124,7 +155,7 @@ class ExtGrid(object):
                 dock: 'bottom',
                 displayInfo: true
                 """
-        if self.button_home or self.button_new:
+        if self.editing or self.button_home or self.button_new:
             buttons = []
             if self.button_home:
                 b_home = "{ xtype: 'button', text: 'HOME' , "
@@ -142,6 +173,16 @@ class ExtGrid(object):
                         }
                     """ % self.button_new_url
                 buttons.append( b_new )
+            if self.editing:
+                b_new = "{ xtype: 'button', text: 'SAVE' , "
+                b_new += """
+                    handler: function(){ 
+                        GStore.save();                    
+                        pageState.ClearDirty();
+                        } 
+                        }
+                    """
+                buttons.append( b_new )
             paging += """
                 }, {
                 xtype: 'toolbar',
@@ -155,7 +196,7 @@ class ExtGrid(object):
         scripts += grid_fin
 
         return ENTETE+scripts+FIN
-
+1
 ## ---------------
 ## CLASS CHAMP
 ## ---------------
