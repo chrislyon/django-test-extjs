@@ -8,11 +8,21 @@ from extjs_lib.grid import ExtGrid, GridCol
 from extjs_lib.form import ExtForm, Zone, ZBox
 from tt.models import Action, ActionForm, STATUS_ACTION
 
+import datetime
+
 import pdb
 
 ## -----------------------
 ## La liste de depart
 ## -----------------------
+#@csrf_exempt
+def debug(request):
+        print datetime.datetime.now(), request.POST
+        obj = []
+        data = '{"total": %s, "%s": %s}' % (0, 'rows', simplejson.dumps(obj))
+        return HttpResponse(data, mimetype='text/javascript')  
+
+#@csrf_exempt
 def liste(request):
     if request.method == 'POST':
         ## --------------------------------------
@@ -24,7 +34,7 @@ def liste(request):
         def_limit = 10
         ## Pour debug ( Err 500 :( )
         #pdb.set_trace()
-        print request.POST
+        print datetime.datetime.now(), request.POST
         start = request.POST.get('start', 0)
         limit = request.POST.get('limit', def_limit)
         tri = request.POST.get('sort', None)

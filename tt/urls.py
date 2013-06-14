@@ -6,4 +6,5 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('tt.views',
     (r'^$', 'liste'),
+    (r'^update$', 'debug'),
 )

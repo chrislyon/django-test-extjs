@@ -101,6 +101,7 @@ class ExtGrid(object):
             var GStore = Ext.create('Ext.data.Store', {
             model: GModel,
             autoLoad: true,
+            autoSync: true,
             remoteSort: true,
             """
             store += "pageSize: %s," % self.pageSize
@@ -108,26 +109,73 @@ class ExtGrid(object):
             proxy: {
                 type: 'ajax',
                 actionMethods:'POST',
-                url : '%s',
+                api: {
+                    create: '%s?action=create',
+                    read: '%s?action=read',
+                    update: '%supdate',
+                    destroy: '%s?action=delete'
+                    },
                 extraParams: {
                         'csrfmiddlewaretoken':CSRF_TOKEN
                         },
                 reader: {
                     type: 'json',
                     root: 'rows',
-                    totalProperty: 'total'
+                    totalProperty: 'total',
+                    successProperty: 'success',
+                    messageProperty: 'message'
                     },
-                 writer: new Ext.data.JsonWriter( { encode: false, writeAllFields: true, listful: true })
-                }
-            """ % self.data_url
+                    writer: {
+                    type: 'json',
+                    writeAllFields: true,
+                    root: 'rows'
+                    },
+                    listeners: {
+                    exception: function(proxy, response, operation){
+                        Ext.MessageBox.show({
+                            title: 'REMOTE EXCEPTION',
+                            msg: operation.getError(),
+                            icon: Ext.MessageBox.ERROR,
+                            buttons: Ext.Msg.OK
+                            });
+                        }
+                    }
+                 },
+                 listeners: {
+                     write: function(proxy, operation){
+                         var p = proxy;
+                         if (operation.action == 'destroy') {
+                             main.child('#form').setActiveRecord(null);
+                             }
+                         alert(operation.action, operation.resultSet.message);
+                         }
+                 }
+
+            """ % (self.data_url, self.data_url, self.data_url, self.data_url)
             store += proxy
             store += "});"
+            store += """
+            //var extraParams = [];
+            //extraParams['csrfmiddlewaretoken'] = CSRF_TOKEN;
+            //extraParams['toto'] = 'TUTU';
+            //GStore.getProxy().setExtraParams.toto = 'TUTU';
+            GStore.load();
+
+            Ext.Ajax.on('beforerequest', function(o,r) {
+                 var toto = r;
+                 r.jsonData.csrfmiddlewaretoken = CSRF_TOKEN;
+                 r.headers = Ext.apply({
+                       'Accept': 'application/json',
+                        'X-CSRF-Token': CSRF_TOKEN }, r.headers || {});
+                                   });
+                        
+            """
         #scripts += store % simplejson.dumps(self.data)
-        ## -----------
+        ## ----------- fin du store
         scripts += store
         ## Definition de la grille
         grid_debut = """
-        Ext.create('Ext.grid.Panel', {
+        var GRID = Ext.create('Ext.grid.Panel', {
         """
         grid_debut += "renderTo: %s," % self.renderTo
         grid_debut += "store: GStore,"
@@ -139,7 +187,9 @@ class ExtGrid(object):
             plugins: [ Ext.create('Ext.grid.plugin.CellEditing', { clicksToEdit: 1 }) ],
         """
         grid_debut += "columns:["
+
         grid_fin = " });"
+
         scripts += grid_debut
         cols = [ c.to_grid() for c in self.cols ]
         if self.modif:
