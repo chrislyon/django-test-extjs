@@ -17,9 +17,13 @@ import pdb
 ## -----------------------
 #@csrf_exempt
 def debug(request):
-        print datetime.datetime.now(), request.POST
-        obj = []
+        print datetime.datetime.now(), "DEBUG", request.POST
+        obj = {
+            'success' : True,
+            'message' : 'OK'
+        }
         data = '{"total": %s, "%s": %s}' % (0, 'rows', simplejson.dumps(obj))
+        print "DEBUG", data
         return HttpResponse(data, mimetype='text/javascript')  
 
 #@csrf_exempt
@@ -34,7 +38,7 @@ def liste(request):
         def_limit = 10
         ## Pour debug ( Err 500 :( )
         #pdb.set_trace()
-        print datetime.datetime.now(), request.POST
+        print datetime.datetime.now(), 'LISTE', request.POST
         start = request.POST.get('start', 0)
         limit = request.POST.get('limit', def_limit)
         tri = request.POST.get('sort', None)
@@ -87,14 +91,14 @@ def liste(request):
         g.add_col( GridCol('id', text='Id', width=50, sortable=True) )
         g.add_col( GridCol('qui', text='Qui', width=100, sortable=True, editor='textfield') )
         g.add_col( GridCol('quoi', text="Quoi", width=300, sortable=True, editor='textfield') )
-        g.add_col( GridCol('quand', text="Quand", width=100, sortable=True, editor='datetimefield') )
+        g.add_col( GridCol('quand', text="Quand", width=150, sortable=True, editor='datetimefield') )
         g.add_col( GridCol('temps', text="Temps", width=70, sortable=True) )
         g.add_col( GridCol('status', text='Status', width=100, sortable=True) )
         g.titre = "Liste des Actions"
         g.width = 1000
         g.height = 400 
         g.pageSize = 10
-        g.data_url = '/tt/'
+        g.data_url = '/tt'
         g.base_url = '/tt'
         g.button_new_url = '/tt/cr'
         g.button_home = '/'

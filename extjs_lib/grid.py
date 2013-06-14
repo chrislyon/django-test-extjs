@@ -98,6 +98,14 @@ class ExtGrid(object):
             ## Store avec possibilite de sauvegarde
             store = """
             var CSRF_TOKEN = Ext.util.Cookies.get('csrftoken');
+            var MyWriter = new Ext.data.JsonWriter({
+                                    type: 'json',
+                                    encode: true,
+                                    listful: true,
+                                    writeAllFields: true,
+                                    returnJson: true,
+                                    root:'rows'
+                                    });
             var GStore = Ext.create('Ext.data.Store', {
             model: GModel,
             autoLoad: true,
@@ -109,11 +117,12 @@ class ExtGrid(object):
             proxy: {
                 type: 'ajax',
                 actionMethods:'POST',
+                //url: '%s',
                 api: {
-                    create: '%s?action=create',
-                    read: '%s?action=read',
-                    update: '%supdate',
-                    destroy: '%s?action=delete'
+                    create: '%s/create',
+                    read: '%s/read',
+                    update: '%s/update',
+                    destroy: '%s/destroy'
                     },
                 extraParams: {
                         'csrfmiddlewaretoken':CSRF_TOKEN
@@ -125,12 +134,8 @@ class ExtGrid(object):
                     successProperty: 'success',
                     messageProperty: 'message'
                     },
-                    writer: {
-                    type: 'json',
-                    writeAllFields: true,
-                    root: 'rows'
-                    },
-                    listeners: {
+                writer: MyWriter,
+                listeners: {
                     exception: function(proxy, response, operation){
                         Ext.MessageBox.show({
                             title: 'REMOTE EXCEPTION',
@@ -143,15 +148,12 @@ class ExtGrid(object):
                  },
                  listeners: {
                      write: function(proxy, operation){
-                         var p = proxy;
-                         if (operation.action == 'destroy') {
-                             main.child('#form').setActiveRecord(null);
-                             }
-                         alert(operation.action, operation.resultSet.message);
+                             proxy.extraParams.operation = operation.action;
+                             alert(operation.action, operation.resultSet.message);
                          }
                  }
 
-            """ % (self.data_url, self.data_url, self.data_url, self.data_url)
+            """ % (self.data_url,self.data_url, self.data_url, self.data_url, self.data_url)
             store += proxy
             store += "});"
             store += """
@@ -159,15 +161,12 @@ class ExtGrid(object):
             //extraParams['csrfmiddlewaretoken'] = CSRF_TOKEN;
             //extraParams['toto'] = 'TUTU';
             //GStore.getProxy().setExtraParams.toto = 'TUTU';
-            GStore.load();
+            //GStore.load();
 
             Ext.Ajax.on('beforerequest', function(o,r) {
-                 var toto = r;
-                 r.jsonData.csrfmiddlewaretoken = CSRF_TOKEN;
-                 r.headers = Ext.apply({
-                       'Accept': 'application/json',
-                        'X-CSRF-Token': CSRF_TOKEN }, r.headers || {});
-                                   });
+                 //r.params.csrfmiddlewaretoken = CSRF_TOKEN;
+                 //r.params.csrftoken = CSRF_TOKEN;
+               });
                         
             """
         #scripts += store % simplejson.dumps(self.data)

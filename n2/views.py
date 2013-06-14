@@ -44,7 +44,7 @@ def liste(request):
         def_limit = 10
         ## Pour debug ( Err 500 :( )
         #pdb.set_trace()
-        #print request.POST
+        print request.POST
         start = request.POST.get('start', 0)
         limit = request.POST.get('limit', def_limit)
         tri = request.POST.get('sort', None)
