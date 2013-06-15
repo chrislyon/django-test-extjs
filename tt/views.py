@@ -16,18 +16,21 @@ import pdb
 ## La liste de depart
 ## -----------------------
 #@csrf_exempt
-def debug(request):
-        print datetime.datetime.now(), "DEBUG", request.POST
-        obj = {
-            'success' : True,
-            'message' : 'OK'
-        }
-        data = '{"total": %s, "%s": %s}' % (0, 'rows', simplejson.dumps(obj))
-        print "DEBUG", data
-        return HttpResponse(data, mimetype='text/javascript')  
+def debug(request, action):
+    print datetime.datetime.now(), "DEBUG"," - ACTION : %s" % action
+    print request.POST
+    obj = {
+        'total' : 0,
+        'message' : 'OK',
+        'success' : True,
+        'rows' : []
+    }
+    data = simplejson.dumps(obj)
+    print "DEBUG", data
+    return HttpResponse(data, mimetype='text/javascript')  
 
 #@csrf_exempt
-def liste(request):
+def liste(request, action='read'):
     if request.method == 'POST':
         ## --------------------------------------
         ## c'est une demande de donnees (POST)

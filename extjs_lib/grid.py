@@ -139,19 +139,32 @@ class ExtGrid(object):
                     exception: function(proxy, response, operation){
                         Ext.MessageBox.show({
                             title: 'REMOTE EXCEPTION',
-                            msg: operation.getError(),
+                            //msg: operation.getError(),
+                            msg: 'Operation '+operation.action+':'+response.responseText,
                             icon: Ext.MessageBox.ERROR,
                             buttons: Ext.Msg.OK
                             });
                         }
                     }
                  },
-                 listeners: {
-                     write: function(proxy, operation){
-                             proxy.extraParams.operation = operation.action;
-                             alert(operation.action, operation.resultSet.message);
-                         }
-                 }
+//                 /*listeners: {
+//                     update: function(proxy, operation){
+//                                     Ext.each(operation.records, function(record){
+//                                         if (record.dirty) {
+//                                             record.commit();
+//                                             }
+//                                         });
+//                                     alert(operation.action, operation.resultSet.message);
+//                             },
+//                     write: function(proxy, operation){
+//                                     Ext.each(operation.records, function(record){
+//                                         if (record.dirty) {
+//                                             record.commit();
+//                                             }
+//                                         });
+//                                     alert(operation.action, operation.resultSet.message);
+//                         }
+//                 } */
 
             """ % (self.data_url,self.data_url, self.data_url, self.data_url, self.data_url)
             store += proxy

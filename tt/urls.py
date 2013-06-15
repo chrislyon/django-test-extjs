@@ -4,10 +4,12 @@ from django.conf.urls import patterns, include, url
 # from django.contrib import admin
 # admin.autodiscover()
 
+#   url(r'^(?P<poll_id>\d+)/$', views.detail, name='detail'),
+
 urlpatterns = patterns('tt.views',
     (r'^$', 'liste'),
-    (r'^create$', 'debug'),
-    (r'^read$', 'liste'),
-    (r'^update$', 'liste'),
-    (r'^destroy$', 'debug'),
+    (r'^(?P<action>create)$', 'debug'),
+    (r'^(?P<action>read)$', 'liste'),
+    (r'^(?P<action>update)$', 'debug'),
+    (r'^(?P<action>destroy)$', 'debug'),
 )
