@@ -29,6 +29,22 @@ def debug(request, action):
     print "DEBUG", data
     return HttpResponse(data, mimetype='text/javascript')  
 
+def update(request, action):
+    model = Action
+    form = ActionForm
+    print datetime.datetime.now(), "UPDATE"," - ACTION : %s" % action
+    pdb.set_trace()
+    record = simplejson.loads(request.POST['rows'])
+    enreg_id = record['id']
+    a = model.objects.get(id=enreg_id)
+    f = form(request.POST, instance=a)
+    if f.is_valid():
+        f.save()
+        r = '{ success: true, msg: "OK" }'
+    else:
+        r = '{ success: false, msg: "Form Invalid" }'
+    return HttpResponse(r, mimetype='application/json')
+
 #@csrf_exempt
 def liste(request, action='read'):
     if request.method == 'POST':

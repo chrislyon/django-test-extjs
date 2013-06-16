@@ -10,6 +10,6 @@ urlpatterns = patterns('tt.views',
     (r'^$', 'liste'),
     (r'^(?P<action>create)$', 'debug'),
     (r'^(?P<action>read)$', 'liste'),
-    (r'^(?P<action>update)$', 'debug'),
+    (r'^(?P<action>update)$', 'update'),
     (r'^(?P<action>destroy)$', 'debug'),
 )
