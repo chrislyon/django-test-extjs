@@ -30,8 +30,18 @@ class ExtGrid(object):
     def add_col(self, col):
         self.cols.append(col)
 
-    def liste_cols_name(self):
-        return [ c.name for c in self.cols ]
+    def model_cols_name(self):
+        r = []
+        if not self.editing:
+            r = simplejson.dumps([ c.name for c in self.cols ])
+        else:
+            for c in self.cols:
+                if c.xtype == 'datefield':
+                    r.append( "{name: '%s',type: 'date',dateFormat: 'd/m/y'}" % c.name )
+                else:
+                    r.append( "{name: '%s',type: 'string' }" % c.name )
+            r = "[ %s ]" % ",".join(r)
+        return r
 
     def render(self):
         scripts = ''
@@ -66,7 +76,7 @@ class ExtGrid(object):
         if self.modif or self.delete:
             scripts += DEL_MOD
         ## Attention l'ordre des cols a de l'importance
-        scripts += model % simplejson.dumps(self.liste_cols_name())
+        scripts += model % self.model_cols_name()
         ## Definition du store
         if not self.editing:
             store = """
@@ -208,7 +218,7 @@ class ExtGrid(object):
             cols.append("{header: 'Edit', width: 50, dataIndex: 'id',sortable: false, renderer: renderIcon_mod }")
         if self.delete:
             cols.append("{header: 'Delete', width: 50, dataIndex: 'id',sortable: false, renderer: renderIcon_del }")
-        scripts += ','.join(cols)
+        scripts += ',\n'.join(cols)
         scripts += '],'
         paging = """
             dockedItems: [{
@@ -267,6 +277,7 @@ class GridCol(object):
         Colonne de la grille
     """
     def __init__(self, name, **kwargs):
+        ## Transmises
         self.name = name
         self.text = kwargs.get('text', 'Champ %s ' % name )
         self.dataIndex = kwargs.get('dataIndex', name)
@@ -276,9 +287,51 @@ class GridCol(object):
         self.sortable = kwargs.get('sortable', False)
         self.renderer = kwargs.get('renderer', None)
         self.editor = kwargs.get('editor', None)
+        ## Non transmises
+        self.xtype = kwargs.get('xtype', None)
+        self.store = kwargs.get('store', [[ 'Choix 1' , 'CHOIX1'], ['Choix 2', 'CHOIX 2']] )
 
     def to_grid(self):
-        return simplejson.dumps(self.__dict__)
+        d = {   "hideable": self.hideable, 
+                "sortable": self.sortable, 
+                "name": self.name, 
+                "text": self.text, 
+                "width": self.width, 
+                "dataIndex": self.dataIndex, 
+                "hidden": self.hidden, 
+                "editor": self.editor, 
+                "renderer": self.renderer
+            }
+        r = simplejson.dumps(d)
+        #{   header: 'Available',
+        #    dataIndex: 'availDate',
+        #    width: 95,
+        #    renderer: Ext.util.Format.dateRenderer('M d, Y'),
+        #    editor: {
+        #        xtype: 'datefield',
+        #        format: 'm/d/y',
+        #        minValue: '01/01/06',
+        #        disabledDays: [0, 6],
+        #        disabledDaysText: 'Plants are not available on the weekends'
+        #}
+
+        ## La gestion de la saisie  date + temps ne fonctionne pas
+        #if self.xtype == 'datetimefield':
+        #    renderer = "renderer: Ext.util.Format.dateRenderer('d/m/y')"
+        #    r = r.replace('"renderer": null', renderer)
+        #    editor = "editor: { xtype: 'datefield', format: 'd/m/y' }"
+        #    r = r.replace('"editor": null', editor)
+
+        if self.xtype == 'datefield':
+            renderer = "renderer: Ext.util.Format.dateRenderer('d/m/y')"
+            r = r.replace('"renderer": null', renderer)
+            editor = "editor: { xtype: 'datefield', format: 'd/m/y' }"
+            r = r.replace('"editor": null', editor)
+
+        if self.xtype == 'combo':
+            editor = "editor: new Ext.form.field.ComboBox({ typeAhead: true, triggerAction: 'all', store: %s })" % [ list(x) for x in self.store ]
+            r = r.replace('"editor": null', editor)
+        return r
 
 def test2():
     g = ExtGrid()

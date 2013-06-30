@@ -13,7 +13,7 @@ STATUS_ACTION = (
 class Action(models.Model):
     qui = models.CharField(_(u'Titre'),max_length=50)
     quoi = models.TextField(_(u'Description'),blank=True)
-    quand = models.DateTimeField(auto_now_add=True)
+    quand = models.DateField()
     temps = models.CharField(_(u'Tag1'),max_length=20, blank=True)
     status = models.CharField(_(u'Status'), max_length=5, choices=STATUS_ACTION, default='OK' )
     desc = models.TextField(_(u'Description'),blank=True)
@@ -21,18 +21,21 @@ class Action(models.Model):
     #date_mo = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return "%s : %s" %  (self.id, self.qui, self.quoi)
+        return "%s : %s / %s" %  (self.id, self.qui, self.quoi)
 
     def to_json(self):
-        return dict(
+        print "quand = %s " % self.quand
+        d =  dict(
                         id = self.id,
                         qui = self.qui,
                         quoi = self.quoi,
-                        quand = self.quand.strftime('%d/%m/%y %X'),
+                        ## Attention avec l'heure
+                        quand = self.quand.strftime('%d/%m/%y'),
                         temps = self.temps,
                         status = self.status,
                         desc = self.desc,
                 )
+        return d
 
 class ActionForm(ModelForm):
     class Meta:
