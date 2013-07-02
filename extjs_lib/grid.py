@@ -24,6 +24,7 @@ class ExtGrid(object):
         self.button_home = True
         self.button_home_url = '/'
         self.editing = False
+        self.RowEditing = False
         self.cols = []
         self.data = []
 
@@ -105,6 +106,7 @@ class ExtGrid(object):
             store += proxy
             store += "});"
         else:
+            ## Edition de la Grille
             ## Store avec possibilite de sauvegarde
             store = """
             var CSRF_TOKEN = Ext.util.Cookies.get('csrftoken');
@@ -196,18 +198,33 @@ class ExtGrid(object):
         ## ----------- fin du store
         scripts += store
         ## Definition de la grille
-        grid_debut = """
-        var GRID = Ext.create('Ext.grid.Panel', {
-        """
+        if self.RowEditing:
+            grid_debut = """
+             var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+                         clicksToMoveEditor: 1,
+                         autoCancel: false
+                     });
+            var GRID = Ext.create('Ext.grid.Panel', {
+            """
+        else:
+            grid_debut = """
+            var GRID = Ext.create('Ext.grid.Panel', {
+            """
         grid_debut += "renderTo: %s," % self.renderTo
         grid_debut += "store: GStore,"
         grid_debut += "width: %s," % self.width
         grid_debut += "height: %s," % self.height
         grid_debut += "title: '%s'," % self.titre
-        grid_debut += """
-            selType: 'cellmodel',
-            plugins: [ Ext.create('Ext.grid.plugin.CellEditing', { clicksToEdit: 1 }) ],
-        """
+        if self.RowEditing:
+            grid_debut += """
+                selType: 'rowmodel',
+                plugins: [ rowEditing ],
+            """
+        else:
+            grid_debut += """
+                selType: 'cellmodel',
+                plugins: [ Ext.create('Ext.grid.plugin.CellEditing', { clicksToEdit: 1 }) ],
+            """
         grid_debut += "columns:["
 
         grid_fin = " });"
@@ -227,34 +244,48 @@ class ExtGrid(object):
                 dock: 'bottom',
                 displayInfo: true
                 """
-        if self.editing or self.button_home or self.button_new:
+        if self.button_home or self.button_new:
             buttons = []
-            if self.button_home:
-                b_home = "{ xtype: 'button', text: 'HOME' , "
-                b_home += """
-                    handler: function(){ 
-                        window.location = "%s"; } 
-                        }
-                    """ % self.button_home_url
-                buttons.append( b_home )
-            if self.button_new:
+            ## Mode Edition
+            if self.editing:
                 b_new = "{ xtype: 'button', text: 'NEW' , "
                 b_new += """
-                    handler: function(){ 
-                        window.location = "%s"; } 
-                        }
-                    """ % self.button_new_url
-                buttons.append( b_new )
-            if self.editing:
-                b_new = "{ xtype: 'button', text: 'SAVE' , "
-                b_new += """
-                    handler: function(){ 
-                        GStore.save();                    
-                        pageState.ClearDirty();
+                    handler : function() {
+                        rowEditing.cancelEdit();
+
+                        // Create a record instance through the ModelManager
+                        var r = Ext.ModelManager.create({
+                            id:'0',
+                            qui: 'INTERNE',
+                            quoi: '<A MODIFIER>',
+                            quand: new Date(),
+                            temps: 5,
+                            status: "A_FAIRE"
+                        }, 'GModel');
+
+                    GStore.insert(0, r);
+                    rowEditing.startEdit(0, 0);
+                    }
                         } 
-                        }
                     """
                 buttons.append( b_new )
+            else:
+                if self.button_home:
+                    b_home = "{ xtype: 'button', text: 'HOME' , "
+                    b_home += """
+                        handler: function(){ 
+                            window.location = "%s"; } 
+                            }
+                        """ % self.button_home_url
+                    buttons.append( b_home )
+                if self.button_new:
+                    b_new = "{ xtype: 'button', text: 'NEW' , "
+                    b_new += """
+                        handler: function(){ 
+                            window.location = "%s"; } 
+                            }
+                        """ % self.button_new_url
+                    buttons.append( b_new )
             paging += """
                 }, {
                 xtype: 'toolbar',

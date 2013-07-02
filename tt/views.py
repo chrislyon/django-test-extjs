@@ -42,13 +42,15 @@ def update(request, action):
     ## 
     #record = record[0]
     enreg_id = record['id']
+    print "enreg_id = %s" % enreg_id
+    ## Si enreg_id = 0 alors creation
     enreg = model.objects.get(id=enreg_id)
     enreg.qui  = record['qui']
-    print "=== %s " % record['quand']
+    #print "=== %s " % record['quand']
     t = time.strptime(record['quand'], '%d/%m/%y')
     dt = datetime.datetime(*t[:6])
     enreg.quand  = dt.strftime('%Y-%m-%d')
-    print "=== %s " % enreg.quand
+    #print "=== %s " % enreg.quand
     enreg.quoi  = record['quoi']
     enreg.temps  = record['temps']
     enreg.status  = record['status']
@@ -136,6 +138,7 @@ def liste(request, action='read'):
         g.button_new_url = '/tt/cr'
         g.button_home = '/'
         g.editing = True
+        g.RowEditing = True
         g.modif = False
         S = g.render()
         #print S
