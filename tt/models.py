@@ -13,7 +13,7 @@ STATUS_ACTION = (
 class Action(models.Model):
     qui = models.CharField(_(u'Titre'),max_length=50)
     quoi = models.TextField(_(u'Description'),blank=True)
-    quand = models.DateField()
+    quand = models.DateField(auto_now_add=True)
     temps = models.CharField(_(u'Tag1'),max_length=20, blank=True)
     status = models.CharField(_(u'Status'), max_length=5, choices=STATUS_ACTION, default='OK' )
     desc = models.TextField(_(u'Description'),blank=True)

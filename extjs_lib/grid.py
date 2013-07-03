@@ -25,6 +25,7 @@ class ExtGrid(object):
         self.button_home_url = '/'
         self.editing = False
         self.RowEditing = False
+        self.RowDefaultValue = None
         self.cols = []
         self.data = []
 
@@ -253,21 +254,15 @@ class ExtGrid(object):
                     handler : function() {
                         rowEditing.cancelEdit();
 
+                        // ICI C'est specifique faudrait mettre cela dans un attribut
                         // Create a record instance through the ModelManager
-                        var r = Ext.ModelManager.create({
-                            id:'0',
-                            qui: 'INTERNE',
-                            quoi: '<A MODIFIER>',
-                            quand: new Date(),
-                            temps: 5,
-                            status: "A_FAIRE"
-                        }, 'GModel');
+                        var r = Ext.ModelManager.create(%s, 'GModel');
 
                     GStore.insert(0, r);
                     rowEditing.startEdit(0, 0);
                     }
                         } 
-                    """
+                    """ % self.RowDefaultValue
                 buttons.append( b_new )
             else:
                 if self.button_home:

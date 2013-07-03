@@ -44,7 +44,10 @@ def update(request, action):
     enreg_id = record['id']
     print "enreg_id = %s" % enreg_id
     ## Si enreg_id = 0 alors creation
-    enreg = model.objects.get(id=enreg_id)
+    if enreg_id == '0':
+        enreg = model.objects.create()
+    else:
+        enreg = model.objects.get(id=enreg_id)
     enreg.qui  = record['qui']
     #print "=== %s " % record['quand']
     t = time.strptime(record['quand'], '%d/%m/%y')
@@ -140,6 +143,9 @@ def liste(request, action='read'):
         g.editing = True
         g.RowEditing = True
         g.modif = False
+        g.RowDefaultValue = """
+            { id:'0', qui: 'INTERNE', quoi: '<A MODIFIER>', quand: new Date(), temps: 5, status: "A_FAIRE" }
+            """
         S = g.render()
         #print S
         template = 'tt/liste.html'
