@@ -258,9 +258,9 @@ class ExtGrid(object):
                         // Create a record instance through the ModelManager
                         var r = Ext.ModelManager.create(%s, 'GModel');
 
-                    GStore.insert(0, r);
-                    rowEditing.startEdit(0, 0);
-                    }
+                        GStore.insert(0, r);
+                        rowEditing.startEdit(0, 0);
+                        }
                         } 
                     """ % self.RowDefaultValue
                 buttons.append( b_new )

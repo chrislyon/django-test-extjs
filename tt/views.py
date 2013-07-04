@@ -35,14 +35,14 @@ def update(request, action):
     model = Action
     #form = ActionForm
     ## Debug
-    print datetime.datetime.now(), "UPDATE"," - ACTION : %s" % action
+    #print datetime.datetime.now(), "UPDATE"," - ACTION : %s" % action
     #pdb.set_trace()
     record = simplejson.loads(request.POST['rows'])
-    print "Record = %s " % record
+    #print "Record = %s " % record
     ## 
     #record = record[0]
     enreg_id = record['id']
-    print "enreg_id = %s" % enreg_id
+    #print "enreg_id = %s" % enreg_id
     ## Si enreg_id = 0 alors creation
     if enreg_id == '0':
         enreg = model.objects.create()
@@ -94,7 +94,7 @@ def liste(request, action='read'):
             if tri:
                 sens = tri[0]['direction']
                 ztri = tri[0]['property']
-                #print "tri = %s / sens = %s / ztri = %s " % (tri, sens, ztri)
+                print "tri = %s / sens = %s / ztri = %s " % (tri, sens, ztri)
 
 
         #pdb.set_trace()
@@ -104,9 +104,11 @@ def liste(request, action='read'):
             if sens != 'ASC':
                 obj_list = obj_list.reverse()
         else:
-            obj_list = model.objects.all()[start:start+limit]
+            #obj_list = model.objects.all()[start:start+limit]
+            ## Par defaut inverse de id
+            obj_list = model.objects.order_by('id').reverse()[start:start+limit]
 
-        print obj_list
+        #print obj_list
 
         ## Dans le cas d'une liste d'objets
         obj = [ob.to_json() for ob in obj_list]
