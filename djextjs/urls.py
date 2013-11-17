@@ -22,4 +22,7 @@ urlpatterns = patterns('',
     url(r'^notes/', include('notes.urls')),
     url(r'^n2/', include('n2.urls')),
     url(r'^tt/', include('tt.urls')),
+    url(r'^bry1/', include('bry1.urls')),
+    url(r'^base/', include('base.urls')),
+    url(r'^t2/', include('t2.urls')),
 )

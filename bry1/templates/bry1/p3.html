@@ -1,0 +1,37 @@
+<html>
+<head>
+<title> Page 3 </title>
+<script src="/static/bry1/bryton/brython.js"></script>
+</head>
+<body onload="brython()">
+
+<script type="text/python">
+#
+# Le code Python
+#
+import html
+doc <= "Hello"
+doc <= html.H1("Hello world !")
+doc <= html.PRE("Vive BRYTHON !!!!")
+doc <= html.HR()
+t = html.TABLE(border="1")
+t.style.border = 1
+r = html.TR()
+r <= html.TH("Description")
+r <= html.TH("Quantité")
+r <= html.TH("Prix Unitaire")
+r <= html.TH("Total Ligne")
+t <= r
+for x in range(0,10):
+	r = html.TR()
+	r <= html.TD("Bidule")
+	r <= html.TD("2")
+	r <= html.TD("25.00")
+	r <= html.TD("50.00")
+	t <= r
+
+doc <= t
+</script>
+
+</body>
+</html>

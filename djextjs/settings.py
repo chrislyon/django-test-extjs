@@ -132,6 +132,9 @@ INSTALLED_APPS = (
     'notes',
     'n2',
     'tt',
+    'bry1',
+    'base',
+    't2',
 )
 
 # A sample logging configuration. The only tangible logging

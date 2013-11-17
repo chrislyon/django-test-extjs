@@ -1,0 +1,17 @@
+
+## copie de base dans t2
+cp -r base t2
+## Modif des parametre generaux 
+modif de djextjs/settings.py pour ajout de l'app
+modif de djextjs/urls.py pour ajouts des urls
+## dans le repertoire t2
+dans le répertoire t2 modifier le répertoire templates/base en templates/t2
+dans le fichier urls.py modifier base.views t2.views
+dans le fichier views.py modifier base/index.html en t2/index.html
+
+on doit pouvoir voir qq chose a http://localhost:8000/t2
+
+# Dans t2/templates/index.html
+{% extends "base.html" %} => Version 3 de extjs
+{% extends "base4.html" %} => Version 4
+

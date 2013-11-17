@@ -1,0 +1,116 @@
+<html>
+<head>
+<script src="/static/bry1/bryton/brython.js"></script>
+</head>
+<body onload="brython()">
+
+
+<div style="width:900px;height:600px;background-color:yellow" id="panel"> 
+
+<div id="dest1" style="position:absolute;width:400px;height:200px;background-color:green;color:white;">Dest Zone 1</div> 
+<div id="dest2" style="position:absolute;width:400px;height:200px;background-color:green;color:white;">Dest Zone 2</div> 
+
+<div id="src1" style="position:absolute;width:80px;height:40px;background-color:darkred;">draggable object 1</div> </div>
+<div id="src2" style="position:absolute;width:80px;height:40px;background-color:indianred;">draggable object 2</div> </div>
+<div id="src3" style="position:absolute;width:80px;height:40px;background-color:red;">draggable object 3</div> </div>
+
+<div id="py_source"> 
+</div>
+
+<script type="text/python">
+	doc <= "Vive BRYTHON !!!!"
+	panel = doc["panel"] # yellow zone
+
+	source = doc["src1"] # red zone
+	# place it at (10,10) from panel top left corner
+	source.style.top = "%spx" %(20+panel.top)
+	source.style.left = "%spx" %(10+panel.left)
+	# make red zone draggable
+	source.draggable = True
+
+	source2 = doc["src2"] # red zone
+	# place it at (10,90) from panel top left corner
+	source2.style.top = "%spx" %(90+panel.top)
+	source2.style.left = "%spx" %(10+panel.left)
+	# make red zone draggable
+	source2.draggable = True
+
+	source3 = doc["src3"] # red zone
+	# place it at (10,190) from panel top left corner
+	source3.style.top = "%spx" %(190+panel.top)
+	source3.style.left = "%spx" %(10+panel.left)
+	# make red zone draggable
+	source3.draggable = True
+
+	dest1 = doc["dest1"] # green zone
+	# place it at (10,150) from panel top left corner
+	dest1.style.top = "%spx" %(10+panel.top)
+	dest1.style.left = "%spx" %(150+panel.left)
+
+	dest2 = doc["dest2"] # green zone
+	# place it at (100,150) from panel top left corner
+	dest2.style.top = "%spx" %(250+panel.top)
+	dest2.style.left = "%spx" %(150+panel.left)
+
+	# when mouse is over the draggable element, change cursor
+	def mouse_over(ev):
+		print('mouse over ! ')
+		ev.target.style.cursor = "pointer"
+
+		# offset of mouse relatively to dragged object when dragging starts
+		m0 = [None,None]
+
+		# function called when the user starts dragging the object
+	def drag_start(ev):
+		global m0
+		# compute mouse offset
+		# ev.x and ev.y are the coordinates of the mouse when the event is fired
+		# ev.target is the dragged element. Its attributes "left" and "top" are
+		# integers, the distance from the left and top borders of the document
+		m0 = [ev.x-ev.target.left,ev.y-ev.target.top]
+		# associate data to the dragging process
+		ev.data['text']=ev.target.id
+		# allow dragged object to be moved
+		ev.data.effectAllowed = 'move'
+
+	# function called when the draggable object comes over the destination zone
+	def drag_over(ev):
+		ev.data.dropEffect = 'move'
+		# here we must prevent the default behaviour for this kind of event
+		ev.preventDefault()
+
+	# function attached to the destination zone
+	# describes what happens when the object is dropped, ie when the mouse is
+	# released while the object is over the zone    
+	def drop(ev):
+		# retrieve data stored in drag_start (the draggable element's id)
+		src_id = ev.data['text']
+		elt = doc[src_id]
+		# set the new coordinates of the dragged object
+		elt.style.left = "%spx" %(ev.x-m0[0])
+		elt.style.top = "%spx" %(ev.y-m0[1])
+		# don't drag the object any more
+		#elt.draggable = False
+		# remove the callback function
+		#elt.unbind('mouseover')
+		#elt.style.cursor = "auto"
+		ev.preventDefault()
+
+	# bind events to the draggable objects    
+	source.bind('mouseover',mouse_over)
+	source.bind('dragstart',drag_start)
+	source2.bind('mouseover',mouse_over)
+	source2.bind('dragstart',drag_start)
+	source3.bind('mouseover',mouse_over)
+	source3.bind('dragstart',drag_start)
+
+	# bind events to the destination zone    
+	dest1.bind('dragover',drag_over)
+	dest1.bind('drop',drop)
+	dest2.bind('dragover',drag_over)
+	dest2.bind('drop',drop)
+
+</script>
+
+</body>
+</html>
